@@ -1,0 +1,5 @@
+{
+  "sideEffects": false,
+  "main": "../../../../../cjs/ui/scheduler/appointments/DataProvider/appointmentDataSource.js",
+  "module": "../../../../../esm/ui/scheduler/appointments/DataProvider/appointmentDataSource.js"
+}

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>DevExtreme jQuery Example</title>
+
+    <link rel="stylesheet" type="text/css" href="artifacts/css/dx.light.css"/>
+
+    <script type="text/javascript" src="artifacts/js/jquery.js"></script>
+
+    <!--<script type="text/javascript" src="artifacts/js/cldr.js"></script>
+    <script type="text/javascript" src="artifacts/js/cldr/event.js"></script>
+    <script type="text/javascript" src="artifacts/js/cldr/supplemental.js"></script>
+    <script type="text/javascript" src="artifacts/js/cldr/unresolved.js"></script>
+    <script type="text/javascript" src="artifacts/js/globalize.js"></script>
+    <script type="text/javascript" src="artifacts/js/globalize/message.js"></script>
+    <script type="text/javascript" src="artifacts/js/globalize/number.js"></script>
+    <script type="text/javascript" src="artifacts/js/globalize/currency.js"></script>
+    <script type="text/javascript" src="artifacts/js/globalize/date.js"></script>-->
+
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/3.3.1/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.2/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.2/jszip.min.js"></script> -->
+
+    <script type="text/javascript" src="artifacts/js/dx.all.debug.js" charset="utf-8"></script>
+    <script type="text/javascript" src="demo/data.js" charset="utf-8"></script>
+</head>
+<body>
+    <div class="demo-container">
+        <div id="gridContainer"></div>
+        <div class="options">
+            <div class="caption">Options</div>
+            <div class="option-container">
+              <div class="option">
+                  <span>New Row Position</span>
+                  <div id="newRowPositionSelectBox"></div>
+              </div>
+              <div class="option">
+                  <span>Scrolling mode</span>
+                  <div id="scrollingModeSelectBox"></div>
+              </div>
+          </div>
+        </div>
+    </div>
+    <script>
+        $(() => {
+  const newRowPositionOptions = ['first', 'last', 'pageBottom', 'pageTop', 'viewportBottom', 'viewportTop'];
+  const scrollingModeOptions = ['infinite', 'standard', 'virtual'];
+
+  const dataGrid = $('#gridContainer').dxDataGrid({
+    dataSource: generateData(100000),
+    showBorders: true,
+    editing: {
+      allowAdding: true,
+      allowDeleting: true,
+      allowUpdating: true,
+      mode: 'cell',
+      confirmDelete: false,
+      useIcons: true,
+      newRowPosition: 'viewportTop',
+    },
+    columns: ['id', 'firstName', 'lastName', 'gender', 'birthDate', {
+      type: 'buttons',
+      buttons: [{
+        icon: 'add',
+        onClick(e) {
+          const changes = dataGrid.option('editing.changes');
+          changes.push({
+            type: 'insert',
+            insertAfterKey: e.row.key,
+          });
+          dataGrid.option('editing.changes', changes);
+          dataGrid.editCell(e.row.rowIndex + 1, 'id');
+        },
+        visible({ row }) {
+          return !row.isEditing;
+        },
+      }, 'delete'],
+    }],
+    toolbar: {
+      items: [{
+        name: 'addRowButton',
+        showText: 'always',
+      }],
+    },
+  }).dxDataGrid('instance');
+
+  $('#newRowPositionSelectBox').dxSelectBox({
+    value: 'viewportTop',
+    items: newRowPositionOptions,
+    onValueChanged(e) {
+      dataGrid.option('editing.newRowPosition', e.value);
+    },
+  }).dxSelectBox('instance');
+
+  $('#scrollingModeSelectBox').dxSelectBox({
+    value: 'standard',
+    items: scrollingModeOptions,
+    onValueChanged(e) {
+      dataGrid.option('scrolling.mode', e.value);
+    },
+  }).dxSelectBox('instance');
+});
+
+
+        
+let s = 123456789;
+function random() {
+  s = (1103515245 * s + 12345) % 2147483647;
+  return s % (10 - 1);
+}
+
+function generateData(count) {
+  let i;
+  const surnames = ['Smith', 'Johnson', 'Brown', 'Taylor', 'Anderson', 'Harris', 'Clark', 'Allen', 'Scott', 'Carter'];
+  const names = ['James', 'John', 'Robert', 'Christopher', 'George', 'Mary', 'Nancy', 'Sandra', 'Michelle', 'Betty'];
+  const gender = ['Male', 'Female'];
+  const items = [];
+  const startBirthDate = Date.parse('1/1/1975');
+  const endBirthDate = Date.parse('1/1/1992');
+
+  for (i = 0; i < count; i += 1) {
+    const birthDate = new Date(startBirthDate + Math.floor(
+      (random() * (endBirthDate - startBirthDate)) / 10,
+    ));
+    birthDate.setHours(12);
+
+    const nameIndex = random();
+    const item = {
+      id: i + 1,
+      firstName: names[nameIndex],
+      lastName: surnames[random()],
+      gender: gender[Math.floor(nameIndex / 5)],
+      birthDate,
+    };
+    items.push(item);
+  }
+  return items;
+}
+
+    </script>
+</body>
+</html>

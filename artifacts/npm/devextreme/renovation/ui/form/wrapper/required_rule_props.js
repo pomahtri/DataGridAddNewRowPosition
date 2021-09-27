@@ -1,0 +1,13 @@
+/**
+* DevExtreme (renovation/ui/form/wrapper/required_rule_props.js)
+* Version: 21.2.1
+* Build date: Mon Sep 27 2021
+*
+* Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
+* Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
+*/
+"use strict";
+
+exports.RequiredRule = void 0;
+var RequiredRule = {};
+exports.RequiredRule = RequiredRule;
