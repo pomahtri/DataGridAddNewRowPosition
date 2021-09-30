@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/drop_down_editor/ui.drop_down_editor.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -57,6 +57,8 @@ var _popup = _interopRequireDefault(require("../popup"));
 var _window = require("../../core/utils/window");
 
 var _utils = require("./utils");
+
+var _translator = require("../../animation/translator");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -659,6 +661,16 @@ var DropDownEditor = _text_box.default.inherit({
 
     this._openAction();
 
+    var $popupOverlayContent = this._popup.$overlayContent();
+
+    var position = (0, _translator.locate)($popupOverlayContent);
+
+    if (this._$label && $popupOverlayContent.hasClass(DROP_DOWN_EDITOR_OVERLAY_FLIPPED)) {
+      (0, _translator.move)($popupOverlayContent, {
+        top: position.top - parseInt(this._$label.css('font-size'))
+      });
+    }
+
     (_this$_validationMess = this._validationMessage) === null || _this$_validationMess === void 0 ? void 0 : _this$_validationMess.option('positionRequest', this._getValidationMessagePositionRequest());
   },
   _popupHiddenHandler: function _popupHiddenHandler() {
@@ -813,15 +825,6 @@ var DropDownEditor = _text_box.default.inherit({
 
     this.callBase();
   },
-  _setDeprecatedOptions: function _setDeprecatedOptions() {
-    this.callBase();
-    (0, _extend.extend)(this._deprecatedOptions, {
-      'showPopupTitle': {
-        since: '20.1',
-        alias: 'dropDownOptions.showTitle'
-      }
-    });
-  },
   _optionChanged: function _optionChanged(args) {
     var _this$_popup;
 
@@ -891,11 +894,6 @@ var DropDownEditor = _text_box.default.inherit({
       case 'cancelButtonText':
       case 'buttonsLocation':
         this._setPopupOption('toolbarItems', this._getPopupToolbarItems());
-
-        break;
-
-      case 'showPopupTitle':
-        this._setPopupOption('showTitle', args.value);
 
         break;
 

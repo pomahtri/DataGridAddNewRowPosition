@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/form.d.ts)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -153,6 +153,13 @@ export interface dxFormOptions extends WidgetOptions<dxForm> {
      * @public
      */
     labelLocation?: 'left' | 'right' | 'top';
+    /**
+     * @docid
+     * @type Enums.FormLabelMode
+     * @default "default"
+     * @public
+     */
+     labelMode?: 'default' | 'floating' | 'static' | 'hidden';
     /**
      * @docid
      * @default 200

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scheduler/appointments/DataProvider/appointmentDataProvider.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,6 +10,7 @@ import { AppointmentDataSource } from './appointmentDataSource';
 import { AppointmentFilterBaseStrategy, AppointmentFilterVirtualStrategy } from './appointmentFilter';
 import { ExpressionUtils } from '../../expressionUtils';
 import { createAppointmentAdapter } from '../../appointmentAdapter';
+import { getAppointmentTakesAllDay, getAppointmentTakesSeveralDays } from './utils';
 var FilterStrategies = {
   virtual: 'virtual',
   standard: 'standard'
@@ -89,7 +90,7 @@ export class AppointmentDataProvider {
 
   appointmentTakesAllDay(rawAppointment, startDayHour, endDayHour) {
     var adapter = createAppointmentAdapter(this.key, rawAppointment);
-    return this.getFilterStrategy().appointmentTakesAllDay(adapter, startDayHour, endDayHour);
+    return getAppointmentTakesAllDay(adapter, startDayHour, endDayHour);
   }
 
   hasAllDayAppointments(rawAppointments) {
@@ -113,7 +114,7 @@ export class AppointmentDataProvider {
 
   appointmentTakesSeveralDays(rawAppointment) {
     var adapter = createAppointmentAdapter(this.key, rawAppointment);
-    return this.getFilterStrategy().appointmentTakesSeveralDays(adapter);
+    return getAppointmentTakesSeveralDays(adapter);
   }
 
   sortAppointmentsByStartDate(appointments) {

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/lookup.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,6 +16,7 @@ import { noop } from '../core/utils/common';
 import { getPublicElement } from '../core/element';
 import { each } from '../core/utils/iterator';
 import { extend } from '../core/utils/extend';
+import { getFieldName } from '../core/options/utils';
 import messageLocalization from '../localization/message';
 import devices from '../core/devices';
 import registerComponent from '../core/component_registrator';
@@ -102,7 +103,6 @@ var Lookup = DropDownList.inherit({
        */
       showDropDownButton: false,
       focusStateEnabled: false,
-      animation: {},
       dropDownOptions: {
         showTitle: true,
         width: function width() {
@@ -145,12 +145,6 @@ var Lookup = DropDownList.inherit({
 
       /**
       * @name dxLookupOptions.onKeyDown
-      * @hidden
-      * @action
-      */
-
-      /**
-      * @name dxLookupOptions.onKeyPress
       * @hidden
       * @action
       */
@@ -955,54 +949,12 @@ var Lookup = DropDownList.inherit({
     this._$searchBox = null;
     this.callBase();
   },
-  _setDeprecatedOptions: function _setDeprecatedOptions() {
-    this.callBase();
-    extend(this._deprecatedOptions, {
-      'title': {
-        since: '20.1',
-        alias: 'dropDownOptions.title'
-      },
-      'titleTemplate': {
-        since: '20.1',
-        alias: 'dropDownOptions.titleTemplate'
-      },
-      'onTitleRendered': {
-        since: '20.1',
-        alias: 'dropDownOptions.onTitleRendered'
-      },
-      'fullScreen': {
-        since: '20.1',
-        alias: 'dropDownOptions.fullScreen'
-      },
-      'popupWidth': {
-        since: '20.1',
-        alias: 'dropDownOptions.width'
-      },
-      'popupHeight': {
-        since: '20.1',
-        alias: 'dropDownOptions.height'
-      },
-      'shading': {
-        since: '20.1',
-        alias: 'dropDownOptions.shading'
-      },
-      'closeOnOutsideClick': {
-        since: '20.1',
-        alias: 'dropDownOptions.closeOnOutsideClick'
-      },
-      'position': {
-        since: '20.1',
-        alias: 'dropDownOptions.position'
-      },
-      'animation': {
-        since: '20.1',
-        alias: 'dropDownOptions.animation'
-      }
-    });
-  },
   _optionChanged: function _optionChanged(args) {
-    var name = args.name;
-    var value = args.value;
+    var {
+      name,
+      fullName,
+      value
+    } = args;
 
     switch (name) {
       case 'dataSource':
@@ -1032,18 +984,6 @@ var Lookup = DropDownList.inherit({
         this.callBase(...arguments);
         break;
 
-      case 'title':
-      case 'titleTemplate':
-      case 'onTitleRendered':
-      case 'shading':
-      case 'animation':
-      case 'position':
-      case 'closeOnOutsideClick':
-      case 'fullScreen':
-        this._setPopupOption(name, value);
-
-        break;
-
       case 'usePopover':
       case 'placeholder':
         this._invalidate();
@@ -1059,16 +999,6 @@ var Lookup = DropDownList.inherit({
 
       case 'applyValueMode':
         this.callBase(...arguments);
-        break;
-
-      case 'popupWidth':
-        this._setPopupOption('width', value === 'auto' ? this.initialOption('dropDownOptions').width : value);
-
-        break;
-
-      case 'popupHeight':
-        this._setPopupOption('height', value === 'auto' ? this.initialOption('dropDownOptions').height : value);
-
         break;
 
       case 'onPageLoading':
@@ -1106,6 +1036,26 @@ var Lookup = DropDownList.inherit({
 
       case 'cleanSearchOnOpening':
       case '_scrollToSelectedItemEnabled':
+        break;
+
+      case 'dropDownOptions':
+        switch (fullName) {
+          case 'dropDownOptions.width':
+          case 'dropDownOptions.height':
+            this._popupOptionChanged({
+              name,
+              fullName,
+              value: value === 'auto' ? this.initialOption('dropDownOptions')[getFieldName(fullName)] : value
+            });
+
+            this._options.cache('dropDownOptions', this.option('dropDownOptions'));
+
+            break;
+
+          default:
+            this.callBase(...arguments);
+        }
+
         break;
 
       case 'dropDownCentered':

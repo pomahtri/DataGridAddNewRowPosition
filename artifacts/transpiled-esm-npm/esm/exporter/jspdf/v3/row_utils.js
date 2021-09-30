@@ -1,7 +1,8 @@
 import { isDefined } from '../../../core/utils/type';
 import { calculateRowHeight } from './pdf_utils_v3';
+import { normalizeBoundaryValue } from './normalizeOptions';
 
-function calculateColumnsWidths(doc, dataProvider, topLeft) {
+function calculateColumnsWidths(doc, dataProvider, topLeft, margin) {
   var _topLeft$x;
 
   var columnsWidths = dataProvider.getColumnsWidths();
@@ -10,9 +11,10 @@ function calculateColumnsWidths(doc, dataProvider, topLeft) {
     return [];
   }
 
-  var summaryGridWidth = columnsWidths.reduce((accumulator, width) => accumulator + width); // TODO: check future orientation, measure units and margins there
+  var summaryGridWidth = columnsWidths.reduce((accumulator, width) => accumulator + width);
+  var normalizedMargin = normalizeBoundaryValue(margin); // TODO: check future orientation, measure units there
 
-  var availablePageWidth = doc.internal.pageSize.getWidth() - ((_topLeft$x = topLeft === null || topLeft === void 0 ? void 0 : topLeft.x) !== null && _topLeft$x !== void 0 ? _topLeft$x : 0);
+  var availablePageWidth = doc.internal.pageSize.getWidth() - ((_topLeft$x = topLeft === null || topLeft === void 0 ? void 0 : topLeft.x) !== null && _topLeft$x !== void 0 ? _topLeft$x : 0) - normalizedMargin.left - normalizedMargin.right;
   var ratio = availablePageWidth >= summaryGridWidth ? 1 : availablePageWidth / summaryGridWidth;
   return columnsWidths.map(width => width * ratio);
 }
@@ -20,7 +22,7 @@ function calculateColumnsWidths(doc, dataProvider, topLeft) {
 function initializeCellsWidth(doc, dataProvider, rows, options) {
   var _options$columnWidths;
 
-  var columnWidths = (_options$columnWidths = options === null || options === void 0 ? void 0 : options.columnWidths) !== null && _options$columnWidths !== void 0 ? _options$columnWidths : calculateColumnsWidths(doc, dataProvider, options === null || options === void 0 ? void 0 : options.topLeft);
+  var columnWidths = (_options$columnWidths = options === null || options === void 0 ? void 0 : options.columnWidths) !== null && _options$columnWidths !== void 0 ? _options$columnWidths : calculateColumnsWidths(doc, dataProvider, options === null || options === void 0 ? void 0 : options.topLeft, options === null || options === void 0 ? void 0 : options.margin);
   rows.forEach(row => {
     row.cells.forEach((_ref, index) => {
       var {
@@ -133,13 +135,15 @@ function applyBordersConfig(rows) {
 }
 
 function calculateCoordinates(doc, rows, options) {
-  var _options$topLeft$y, _options$topLeft;
+  var _topLeft$y;
 
-  var y = (_options$topLeft$y = options === null || options === void 0 ? void 0 : (_options$topLeft = options.topLeft) === null || _options$topLeft === void 0 ? void 0 : _options$topLeft.y) !== null && _options$topLeft$y !== void 0 ? _options$topLeft$y : 0;
+  var topLeft = options === null || options === void 0 ? void 0 : options.topLeft;
+  var margin = normalizeBoundaryValue(options === null || options === void 0 ? void 0 : options.margin);
+  var y = ((_topLeft$y = topLeft === null || topLeft === void 0 ? void 0 : topLeft.y) !== null && _topLeft$y !== void 0 ? _topLeft$y : 0) + margin.top;
   rows.forEach(row => {
-    var _options$topLeft$x, _options$topLeft2;
+    var _topLeft$x2;
 
-    var x = (_options$topLeft$x = options === null || options === void 0 ? void 0 : (_options$topLeft2 = options.topLeft) === null || _options$topLeft2 === void 0 ? void 0 : _options$topLeft2.x) !== null && _options$topLeft$x !== void 0 ? _options$topLeft$x : 0;
+    var x = ((_topLeft$x2 = topLeft === null || topLeft === void 0 ? void 0 : topLeft.x) !== null && _topLeft$x2 !== void 0 ? _topLeft$x2 : 0) + margin.left;
     var intend = row.indentLevel * options.indent;
     row.cells.forEach(cell => {
       cell.pdfCell._rect.x = x + intend;
@@ -151,14 +155,14 @@ function calculateCoordinates(doc, rows, options) {
 }
 
 function calculateTableSize(doc, rows, options) {
-  var _topLeft$x2, _topLeft$y, _columnWidths$reduce, _rowHeights$reduce;
+  var _topLeft$x3, _topLeft$y2, _columnWidths$reduce, _rowHeights$reduce;
 
   var topLeft = options === null || options === void 0 ? void 0 : options.topLeft;
   var columnWidths = options === null || options === void 0 ? void 0 : options.columnWidths;
   var rowHeights = rows.map(row => row.height);
   return {
-    x: (_topLeft$x2 = topLeft === null || topLeft === void 0 ? void 0 : topLeft.x) !== null && _topLeft$x2 !== void 0 ? _topLeft$x2 : 0,
-    y: (_topLeft$y = topLeft === null || topLeft === void 0 ? void 0 : topLeft.y) !== null && _topLeft$y !== void 0 ? _topLeft$y : 0,
+    x: (_topLeft$x3 = topLeft === null || topLeft === void 0 ? void 0 : topLeft.x) !== null && _topLeft$x3 !== void 0 ? _topLeft$x3 : 0,
+    y: (_topLeft$y2 = topLeft === null || topLeft === void 0 ? void 0 : topLeft.y) !== null && _topLeft$y2 !== void 0 ? _topLeft$y2 : 0,
     w: (_columnWidths$reduce = columnWidths === null || columnWidths === void 0 ? void 0 : columnWidths.reduce((a, b) => a + b, 0)) !== null && _columnWidths$reduce !== void 0 ? _columnWidths$reduce : 0,
     h: (_rowHeights$reduce = rowHeights === null || rowHeights === void 0 ? void 0 : rowHeights.reduce((a, b) => a + b, 0)) !== null && _rowHeights$reduce !== void 0 ? _rowHeights$reduce : 0
   };

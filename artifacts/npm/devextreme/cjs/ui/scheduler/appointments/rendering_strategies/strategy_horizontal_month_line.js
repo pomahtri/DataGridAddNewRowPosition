@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/appointments/rendering_strategies/strategy_horizontal_month_line.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,10 +17,6 @@ var _date = _interopRequireDefault(require("../../../../core/utils/date"));
 var _query = _interopRequireDefault(require("../../../../data/query"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.create(superClass.prototype); subClass.prototype.constructor = subClass; _setPrototypeOf(subClass, superClass); }
 
@@ -99,18 +95,6 @@ var HorizontalMonthLineRenderingStrategy = /*#__PURE__*/function (_HorizontalApp
       cellPosition: 0
     };
   };
-
-  _createClass(HorizontalMonthLineRenderingStrategy, [{
-    key: "viewDataProvider",
-    get: function get() {
-      return this.options.viewDataProvider;
-    }
-  }, {
-    key: "appointmentDataProvider",
-    get: function get() {
-      return this.options.appointmentDataProvider;
-    }
-  }]);
 
   return HorizontalMonthLineRenderingStrategy;
 }(_strategy_horizontal.default);

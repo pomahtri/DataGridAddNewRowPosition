@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/gantt/ui.gantt.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -417,7 +417,7 @@ class Gantt extends Widget {
     var filterColumn = columns.filter(c => {
       var _c$filterValues;
 
-      return c.filterValue || ((_c$filterValues = c.filterValues) === null || _c$filterValues === void 0 ? void 0 : _c$filterValues.length);
+      return isDefined(c.filterValue) || ((_c$filterValues = c.filterValues) === null || _c$filterValues === void 0 ? void 0 : _c$filterValues.length);
     })[0];
     var sieveColumn = sortColumn || filterColumn;
     var isClearSieving = this.sieveColumn && !sieveColumn;

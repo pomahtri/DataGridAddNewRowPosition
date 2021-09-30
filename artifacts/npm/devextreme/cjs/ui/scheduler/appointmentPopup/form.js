@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/appointmentPopup/form.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -28,7 +28,7 @@ var _extend = require("../../../core/utils/extend");
 
 var _date = _interopRequireDefault(require("../../../core/utils/date"));
 
-var _semaphore = _interopRequireDefault(require("../semaphore"));
+var _semaphore = require("../../../renovation/ui/scheduler/semaphore");
 
 require("../recurrence_editor");
 
@@ -114,7 +114,7 @@ var AppointmentForm = /*#__PURE__*/function () {
   function AppointmentForm(scheduler) {
     this.scheduler = scheduler;
     this.form = null;
-    this.semaphore = new _semaphore.default();
+    this.semaphore = new _semaphore.Semaphore();
   }
 
   var _proto = AppointmentForm.prototype;

@@ -29,7 +29,6 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 var TIMELINE_CLASS = 'dx-scheduler-timeline-month';
-var toMs = _date.default.dateToMilliseconds;
 
 var SchedulerTimelineMonth = /*#__PURE__*/function (_SchedulerTimeline) {
   _inheritsLoose(SchedulerTimelineMonth, _SchedulerTimeline);
@@ -56,10 +55,6 @@ var SchedulerTimelineMonth = /*#__PURE__*/function (_SchedulerTimeline) {
 
   _proto._calculateDurationInCells = function _calculateDurationInCells(timeDiff) {
     return timeDiff / this.getCellDuration();
-  };
-
-  _proto.getCellDuration = function getCellDuration() {
-    return toMs('day');
   };
 
   _proto.isIndicatorVisible = function isIndicatorVisible() {

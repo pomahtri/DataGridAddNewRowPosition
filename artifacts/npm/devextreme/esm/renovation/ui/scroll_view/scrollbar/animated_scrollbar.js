@@ -1,14 +1,14 @@
 /**
 * DevExtreme (esm/renovation/ui/scroll_view/scrollbar/animated_scrollbar.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import _extends from "@babel/runtime/helpers/esm/extends";
 import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
-var _excluded = ["bottomPocketSize", "bounceEnabled", "containerHasSizes", "containerSize", "contentPaddingBottom", "contentSize", "direction", "forceGeneratePockets", "inertiaEnabled", "maxOffset", "minOffset", "onBounce", "onEnd", "onLock", "onPullDown", "onReachBottom", "onRelease", "onUnlock", "pullDownEnabled", "pulledDown", "reachBottomEnabled", "rtlEnabled", "scrollByThumb", "scrollLocation", "scrollLocationChange", "showScrollbar", "visible"];
+var _excluded = ["bottomPocketSize", "bounceEnabled", "containerHasSizes", "containerSize", "contentPaddingBottom", "contentSize", "direction", "forceGeneratePockets", "inertiaEnabled", "maxOffset", "minOffset", "onBounce", "onEnd", "onLock", "onPullDown", "onReachBottom", "onUnlock", "pullDownEnabled", "pulledDown", "reachBottomEnabled", "rtlEnabled", "scrollByThumb", "scrollLocation", "scrollLocationChange", "showScrollbar", "visible"];
 import { createComponentVNode } from "inferno";
 import { InfernoEffect, InfernoComponent } from "@devextreme/runtime/inferno";
 import { BaseWidgetProps } from "../../common/base_props";
@@ -156,7 +156,6 @@ export class AnimatedScrollbar extends InfernoComponent {
     this.loading = false;
     this.state = {
       forceAnimationToBottomBound: false,
-      forceMoveToBound: false,
       pendingRefreshing: false,
       pendingLoading: false,
       pendingBounceAnimator: false,
@@ -260,9 +259,6 @@ export class AnimatedScrollbar extends InfernoComponent {
 
   bounceAnimatorStart() {
     if (!this.inRange && this.state.needRiseEnd && !(this.state.pendingBounceAnimator || this.state.pendingInertiaAnimator) && !(this.state.pendingRefreshing || this.state.pendingLoading) && -this.props.maxOffset > 0) {
-      this.setState(__state_argument => ({
-        forceMoveToBound: false
-      }));
       this.start("bounce");
     }
   }
@@ -518,15 +514,12 @@ export class AnimatedScrollbar extends InfernoComponent {
   }
 
   releaseHandler() {
-    var _this$props$onRelease, _this$props8;
-
     if (this.props.forceGeneratePockets && this.props.reachBottomEnabled && inRange(this.props.scrollLocation, this.maxOffset, this.props.maxOffset)) {
       this.setState(__state_argument => ({
         forceAnimationToBottomBound: true
       }));
     }
 
-    (_this$props$onRelease = (_this$props8 = this.props).onRelease) === null || _this$props$onRelease === void 0 ? void 0 : _this$props$onRelease.call(_this$props8);
     this.setState(__state_argument => ({
       wasRelease: true
     }));
@@ -547,7 +540,6 @@ export class AnimatedScrollbar extends InfernoComponent {
     return viewFunction({
       props: _extends({}, props),
       forceAnimationToBottomBound: this.state.forceAnimationToBottomBound,
-      forceMoveToBound: this.state.forceMoveToBound,
       pendingRefreshing: this.state.pendingRefreshing,
       pendingLoading: this.state.pendingLoading,
       pendingBounceAnimator: this.state.pendingBounceAnimator,

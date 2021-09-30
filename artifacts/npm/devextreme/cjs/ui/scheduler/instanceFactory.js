@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/instanceFactory.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -16,9 +16,9 @@ var _appointmentDataProvider = require("./appointments/DataProvider/appointmentD
 
 var _modelProvider = require("./modelProvider");
 
-var _timeZoneCalculator = require("./timeZoneCalculator");
+var _utils = require("../../renovation/ui/scheduler/timeZoneCalculator/utils");
 
-var _utils = _interopRequireDefault(require("./utils.timeZone"));
+var _utils2 = _interopRequireDefault(require("./utils.timeZone"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -83,15 +83,15 @@ var createAppointmentDataProvider = function createAppointmentDataProvider(key, 
 
 var createTimeZoneCalculator = function createTimeZoneCalculator(key, currentTimeZone) {
   return createInstance(Names.timeZoneCalculator, key, function () {
-    return new _timeZoneCalculator.TimeZoneCalculator({
+    return new _utils.TimeZoneCalculator({
       getClientOffset: function getClientOffset(date) {
-        return _utils.default.getClientTimezoneOffset(date);
+        return _utils2.default.getClientTimezoneOffset(date);
       },
       getCommonOffset: function getCommonOffset(date, timeZone) {
-        return _utils.default.calculateTimezoneByValue(timeZone || currentTimeZone, date);
+        return _utils2.default.calculateTimezoneByValue(timeZone || currentTimeZone, date);
       },
       getAppointmentOffset: function getAppointmentOffset(date, appointmentTimezone) {
-        return _utils.default.calculateTimezoneByValue(appointmentTimezone, date);
+        return _utils2.default.calculateTimezoneByValue(appointmentTimezone, date);
       }
     });
   });

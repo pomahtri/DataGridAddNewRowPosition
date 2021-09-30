@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/utils.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -37,7 +37,7 @@ var utils = {
       var settings = utils.dataAccessors.getAppointmentSettings(element);
       return settings === null || settings === void 0 ? void 0 : settings.info;
     },
-    create: function create(instance, fields, currentDataAccessors, forceIsoDateParsing, getDateSerializationFormat, setDateSerializationFormat) {
+    create: function create(fields, currentDataAccessors, forceIsoDateParsing, getDateSerializationFormat, setDateSerializationFormat) {
       var isDateField = function isDateField(field) {
         return field === 'startDate' || field === 'endDate';
       };
@@ -57,13 +57,13 @@ var utils = {
 
           if (isDateField(name)) {
             dateGetter = function dateGetter() {
-              var value = getter.apply(instance, arguments);
+              var value = getter.apply(void 0, arguments);
 
               if (forceIsoDateParsing) {
                 if (!getDateSerializationFormat()) {
                   var format = _date_serialization.default.getDateSerializationFormat(value);
 
-                  if (format) {
+                  if (format && setDateSerializationFormat) {
                     setDateSerializationFormat(format);
                   }
                 }

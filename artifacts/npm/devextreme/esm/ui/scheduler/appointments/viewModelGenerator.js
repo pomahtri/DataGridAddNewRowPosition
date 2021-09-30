@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scheduler/appointments/viewModelGenerator.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -25,15 +25,15 @@ export class AppointmentViewModel {
     this.renderingStrategy = new RenderingStrategy(options);
   }
 
-  generate(options) {
+  generate(filteredItems, options) {
     var {
       isRenovatedAppointments,
-      filteredItems,
       appointmentRenderingStrategyName
     } = options;
     var appointments = filteredItems ? filteredItems.slice() : [];
     this.initRenderingStrategy(options);
-    var positionMap = this.getRenderingStrategy().createTaskPositionMap(appointments); // TODO - appointments are mutated inside!
+    var renderingStrategy = this.getRenderingStrategy();
+    var positionMap = renderingStrategy.createTaskPositionMap(appointments); // TODO - appointments are mutated inside!
 
     var viewModel = this.postProcess(appointments, positionMap, appointmentRenderingStrategyName, isRenovatedAppointments);
 

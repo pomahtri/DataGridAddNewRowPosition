@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/components.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -20,11 +20,8 @@ module.exports = [{
 }, // { name: 'Widget', pathInRenovationFolder: 'ui/widget.j' },
 // { name: 'ScrollView', pathInRenovationFolder: 'ui/scroll_view/scroll_view.j', pathInJSFolder: 'ui/scroll_view.js', pathToWrapper: '/testing/helpers/renovationScrollViewHelper.js' },
 // { name: 'Scrollable', pathInRenovationFolder: 'ui/scroll_view/scrollable.j', pathInJSFolder: 'ui/scroll_view/ui.scrollable.js', pathToWrapper: '/testing/helpers/renovationScrollableHelper.js' },
+// { name: 'DataGrid', pathInRenovationFolder: 'ui/grids/data_grid/data_grid.j', pathInJSFolder: 'ui/data_grid.js' },
 {
-  name: 'DataGrid',
-  pathInRenovationFolder: 'ui/grids/data_grid/data_grid.j',
-  pathInJSFolder: 'ui/data_grid.js'
-}, {
   name: 'Pager',
   pathInRenovationFolder: 'ui/pager/pager.j',
   pathInJSFolder: 'ui/pager.js',

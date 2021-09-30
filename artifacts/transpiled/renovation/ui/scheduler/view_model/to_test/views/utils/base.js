@@ -1,6 +1,6 @@
 "use strict";
 
-exports.getDisplayedRowCount = exports.getDisplayedCellCount = exports.getTotalRowCountByCompleteData = exports.getTotalCellCountByCompleteData = exports.isHorizontalView = exports.calculateDayDuration = exports.calculateIsGroupedAllDayPanel = exports.getHorizontalGroupCount = exports.isDateAndTimeView = exports.getVerticalGroupCountClass = exports.getToday = exports.formatWeekdayAndDay = exports.formatWeekday = exports.getStartViewDateTimeOffset = exports.validateDayHours = exports.getHeaderCellText = exports.getStartViewDateWithoutDST = exports.calculateCellIndex = exports.calculateViewStartDate = exports.getCalculatedFirstDayOfWeek = exports.getViewStartByOptions = exports.setOptionHour = exports.isDateInRange = void 0;
+exports.getCellDuration = exports.getDisplayedRowCount = exports.getDisplayedCellCount = exports.getTotalRowCountByCompleteData = exports.getTotalCellCountByCompleteData = exports.isHorizontalView = exports.calculateDayDuration = exports.calculateIsGroupedAllDayPanel = exports.getHorizontalGroupCount = exports.isDateAndTimeView = exports.getVerticalGroupCountClass = exports.getToday = exports.formatWeekdayAndDay = exports.formatWeekday = exports.getStartViewDateTimeOffset = exports.validateDayHours = exports.getHeaderCellText = exports.getStartViewDateWithoutDST = exports.calculateCellIndex = exports.calculateViewStartDate = exports.getCalculatedFirstDayOfWeek = exports.getViewStartByOptions = exports.setOptionHour = exports.isDateInRange = void 0;
 
 var _ui = _interopRequireDefault(require("../../../../../../../ui/widget/ui.errors"));
 
@@ -221,3 +221,18 @@ var getDisplayedRowCount = function getDisplayedRowCount(displayedRowCount, comp
 };
 
 exports.getDisplayedRowCount = getDisplayedRowCount;
+
+var getCellDuration = function getCellDuration(viewType, startDayHour, endDayHour, hoursInterval) {
+  switch (viewType) {
+    case "month":
+      return calculateDayDuration(startDayHour, endDayHour) * 3600000;
+
+    case "timelineMonth":
+      return _date.default.dateToMilliseconds("day");
+
+    default:
+      return 3600000 * hoursInterval;
+  }
+};
+
+exports.getCellDuration = getCellDuration;

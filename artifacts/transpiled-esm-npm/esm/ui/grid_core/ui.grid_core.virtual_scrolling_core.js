@@ -8,9 +8,10 @@ import Class from '../../core/class';
 import { Deferred } from '../../core/utils/deferred';
 import Callbacks from '../../core/utils/callbacks';
 import { VirtualDataLoader } from './ui.grid.core.virtual_data_loader';
+import { isDefined } from '../../core/utils/type';
 var SCROLLING_MODE_INFINITE = 'infinite';
 var SCROLLING_MODE_VIRTUAL = 'virtual';
-var NEW_SCROLLING_MODE = 'scrolling.newMode';
+var LEGACY_SCROLLING_MODE = 'scrolling.legacyMode';
 
 var _isVirtualMode = that => that.option('scrolling.mode') === SCROLLING_MODE_VIRTUAL || that._isVirtual;
 
@@ -108,7 +109,7 @@ export var VirtualScrollController = Class.inherit(function () {
     ctor: function ctor(component, dataOptions, isVirtual) {
       this._dataOptions = dataOptions;
       this.component = component;
-      this._viewportSize = component.option(NEW_SCROLLING_MODE) ? 15 : 0;
+      this._viewportSize = component.option(LEGACY_SCROLLING_MODE) === false ? 15 : 0;
       this._viewportItemSize = 20;
       this._viewportItemIndex = 0;
       this._position = 0;
@@ -133,7 +134,7 @@ export var VirtualScrollController = Class.inherit(function () {
         var dataOptions = this._dataOptions;
         var totalItemsCount = dataOptions.totalItemsCount();
 
-        if (this.option(NEW_SCROLLING_MODE) && totalItemsCount !== -1) {
+        if (this.option(LEGACY_SCROLLING_MODE) === false && totalItemsCount !== -1) {
           var viewportParams = this.getViewportParams();
           var loadedOffset = dataOptions.loadedOffset();
           var loadedItemCount = dataOptions.loadedItemCount();
@@ -149,14 +150,27 @@ export var VirtualScrollController = Class.inherit(function () {
         return this._dataLoader.virtualItemsCount.apply(this._dataLoader, arguments);
       }
     },
-    setViewportPosition: function setViewportPosition(position) {
-      var result = new Deferred();
-      var scrollingTimeout = Math.min(this.option('scrolling.timeout') || 0, this._dataOptions.changingDuration());
+    getScrollingTimeout: function getScrollingTimeout() {
+      var renderAsync = this.option('scrolling.renderAsync');
+      var scrollingTimeout = 0;
 
-      if (scrollingTimeout < this.option('scrolling.renderingThreshold')) {
-        scrollingTimeout = this.option('scrolling.minTimeout') || 0;
+      if (!isDefined(renderAsync)) {
+        scrollingTimeout = Math.min(this.option('scrolling.timeout') || 0, this._dataOptions.changingDuration());
+
+        if (scrollingTimeout < this.option('scrolling.renderingThreshold')) {
+          scrollingTimeout = this.option('scrolling.minTimeout') || 0;
+        }
+      } else if (renderAsync) {
+        var _this$option;
+
+        scrollingTimeout = (_this$option = this.option('scrolling.timeout')) !== null && _this$option !== void 0 ? _this$option : 0;
       }
 
+      return scrollingTimeout;
+    },
+    setViewportPosition: function setViewportPosition(position) {
+      var result = new Deferred();
+      var scrollingTimeout = this.getScrollingTimeout();
       clearTimeout(this._scrollTimeoutID);
 
       if (scrollingTimeout > 0) {
@@ -273,7 +287,7 @@ export var VirtualScrollController = Class.inherit(function () {
     setViewportItemIndex: function setViewportItemIndex(itemIndex) {
       this._viewportItemIndex = itemIndex;
 
-      if (this.option(NEW_SCROLLING_MODE)) {
+      if (this.option(LEGACY_SCROLLING_MODE) === false) {
         return;
       }
 
@@ -336,7 +350,7 @@ export var VirtualScrollController = Class.inherit(function () {
       var bottomIndex = this._viewportSize + topIndex;
       var maxGap = this.option('scrolling.prerenderedRowChunkSize') || 1;
       var isScrollingBack = this.isScrollingBack();
-      var minGap = this.option('scrolling.minGap');
+      var minGap = this.option('scrolling.prerenderedRowCount');
       var topMinGap = isScrollingBack ? minGap : 0;
       var bottomMinGap = isScrollingBack ? 0 : minGap;
       var skip = Math.floor(Math.max(0, topIndex - topMinGap) / maxGap) * maxGap;

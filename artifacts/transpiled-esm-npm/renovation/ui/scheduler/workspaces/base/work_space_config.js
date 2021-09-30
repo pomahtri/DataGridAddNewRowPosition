@@ -33,7 +33,8 @@ var verticalViewConfig = {
   getDateForHeaderText: _utils.getDateForHeaderText,
   isRenderDateHeader: true,
   isGenerateWeekDaysHeaderData: false,
-  scrollingDirection: "vertical"
+  scrollingDirection: "vertical",
+  className: "dx-scheduler-work-space-day"
 };
 var timelineViewConfig = {
   headerPanelTemplate: _layout2.TimelineHeaderPanelLayout,
@@ -46,12 +47,12 @@ var timelineViewConfig = {
   getDateForHeaderText: _timeline_week.getDateForHeaderText,
   isRenderDateHeader: true,
   isGenerateWeekDaysHeaderData: true,
-  scrollingDirection: "horizontal"
+  scrollingDirection: "horizontal",
+  className: "dx-scheduler-timeline-day ".concat(TIMELINE_CLASS)
 };
 
 var getDayViewConfig = function getDayViewConfig(intervalCount) {
   return _extends({}, verticalViewConfig, {
-    className: "dx-scheduler-work-space-day",
     isRenderDateHeader: intervalCount > 1
   });
 };
@@ -87,7 +88,6 @@ var getMonthViewConfig = function getMonthViewConfig() {
 
 var getTimelineDayViewConfig = function getTimelineDayViewConfig(intervalCount) {
   return _extends({}, timelineViewConfig, {
-    className: "dx-scheduler-timeline-day ".concat(TIMELINE_CLASS),
     isGenerateWeekDaysHeaderData: intervalCount > 1
   });
 };

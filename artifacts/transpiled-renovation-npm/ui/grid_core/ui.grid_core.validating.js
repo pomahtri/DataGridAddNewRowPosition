@@ -89,7 +89,7 @@ var VALIDATION_STATUS = {
 var EDIT_DATA_INSERT_TYPE = 'insert';
 var EDIT_DATA_REMOVE_TYPE = 'remove';
 var VALIDATION_CANCELLED = 'cancel';
-var NEW_SCROLLING_MODE = 'scrolling.newMode';
+var LEGACY_SCROLLING_MODE = 'scrolling.legacyMode';
 
 var validationResultIsValid = function validationResultIsValid(result) {
   return (0, _type.isDefined)(result) && result !== VALIDATION_CANCELLED;
@@ -752,8 +752,9 @@ var validatingModule = {
           var scrollingMode = this.option('scrolling.mode');
           var virtualMode = scrollingMode === 'virtual';
           var appendMode = scrollingMode === 'infinite';
+          var newMode = this.option(LEGACY_SCROLLING_MODE) === false;
 
-          if (result && !(validationData !== null && validationData !== void 0 && validationData.isValid) && !virtualMode && !(appendMode && this.option(NEW_SCROLLING_MODE))) {
+          if (result && !(validationData !== null && validationData !== void 0 && validationData.isValid) && !virtualMode && !(appendMode && newMode)) {
             result = pageIndex === this._pageIndex;
           }
 

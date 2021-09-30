@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/grid_core/ui.grid_core.utils.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,7 +29,7 @@ var DATAGRID_EXPAND_CLASS = 'dx-datagrid-expand';
 var NO_DATA_CLASS = 'nodata';
 var SCROLLING_MODE_INFINITE = 'infinite';
 var SCROLLING_MODE_VIRTUAL = 'virtual';
-var NEW_SCROLLING_MODE = 'scrolling.newMode';
+var LEGACY_SCROLLING_MODE = 'scrolling.legacyMode';
 var SCROLLING_MODE_OPTION = 'scrolling.mode';
 var ROW_RENDERING_MODE_OPTION = 'scrolling.rowRenderingMode';
 var DATE_INTERVAL_SELECTORS = {
@@ -511,7 +511,7 @@ export default {
     var isVirtualMode = that.option(SCROLLING_MODE_OPTION) === SCROLLING_MODE_VIRTUAL;
     var isAppendMode = that.option(SCROLLING_MODE_OPTION) === SCROLLING_MODE_INFINITE;
 
-    if (that.option(NEW_SCROLLING_MODE) && (isVirtualMode || isAppendMode)) {
+    if (that.option(LEGACY_SCROLLING_MODE) === false && (isVirtualMode || isAppendMode)) {
       return true;
     } else {
       return rowRenderingMode === SCROLLING_MODE_VIRTUAL;

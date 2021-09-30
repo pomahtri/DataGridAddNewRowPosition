@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/workspaces/ui.scheduler.work_space.grouped.strategy.horizontal.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -79,19 +79,7 @@ var HorizontalGroupedStrategy = /*#__PURE__*/function () {
   };
 
   _proto.getGroupCountClass = function getGroupCountClass(groups) {
-    switch (groups === null || groups === void 0 ? void 0 : groups.length) {
-      case 1:
-        return _classes.HORIZONTAL_GROUP_COUNT_CLASSES[0];
-
-      case 2:
-        return _classes.HORIZONTAL_GROUP_COUNT_CLASSES[1];
-
-      case 3:
-        return _classes.HORIZONTAL_GROUP_COUNT_CLASSES[2];
-
-      default:
-        return undefined;
-    }
+    return undefined;
   };
 
   _proto.getLeftOffset = function getLeftOffset() {

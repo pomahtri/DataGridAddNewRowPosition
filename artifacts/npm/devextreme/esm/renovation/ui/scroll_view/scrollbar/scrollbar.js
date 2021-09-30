@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scroll_view/scrollbar/scrollbar.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -91,9 +91,10 @@ import { createRef as infernoCreateRef } from "inferno";
 export class Scrollbar extends InfernoComponent {
   constructor(props) {
     super(props);
+    this.scrollbarRef = infernoCreateRef();
+    this.scrollRef = infernoCreateRef();
     this.rightScrollLocation = 0;
     this.prevScrollLocation = 0;
-    this.scrollbarRef = infernoCreateRef();
     this.thumbRef = infernoCreateRef();
     this.__getterCache = {};
     this.state = {
@@ -120,13 +121,11 @@ export class Scrollbar extends InfernoComponent {
   }
 
   updateEffects() {
-    var _this$_effects$, _this$_effects$2, _this$_effects$3, _this$_effects$4, _this$_effects$5;
+    var _this$_effects$, _this$_effects$2, _this$_effects$3;
 
-    (_this$_effects$ = this._effects[0]) === null || _this$_effects$ === void 0 ? void 0 : _this$_effects$.update([]);
-    (_this$_effects$2 = this._effects[1]) === null || _this$_effects$2 === void 0 ? void 0 : _this$_effects$2.update([]);
-    (_this$_effects$3 = this._effects[2]) === null || _this$_effects$3 === void 0 ? void 0 : _this$_effects$3.update([this.props.showScrollbar]);
-    (_this$_effects$4 = this._effects[3]) === null || _this$_effects$4 === void 0 ? void 0 : _this$_effects$4.update([this.props.showScrollbar]);
-    (_this$_effects$5 = this._effects[4]) === null || _this$_effects$5 === void 0 ? void 0 : _this$_effects$5.update([this.props.containerHasSizes, this.props.scrollLocation, this.props.direction, this.props.rtlEnabled, this.props.maxOffset, this.props.scrollLocationChange]);
+    (_this$_effects$ = this._effects[2]) === null || _this$_effects$ === void 0 ? void 0 : _this$_effects$.update([this.props.showScrollbar]);
+    (_this$_effects$2 = this._effects[3]) === null || _this$_effects$2 === void 0 ? void 0 : _this$_effects$2.update([this.props.showScrollbar]);
+    (_this$_effects$3 = this._effects[4]) === null || _this$_effects$3 === void 0 ? void 0 : _this$_effects$3.update([this.props.containerHasSizes, this.props.scrollLocation, this.props.direction, this.props.rtlEnabled, this.props.maxOffset, this.props.scrollLocationChange]);
   }
 
   pointerDownEffect() {
@@ -187,7 +186,9 @@ export class Scrollbar extends InfernoComponent {
         newScrollLocation = this.props.maxOffset - this.rightScrollLocation;
       }
 
-      this.moveTo(newScrollLocation);
+      if (this.prevScrollLocation !== newScrollLocation) {
+        this.moveTo(newScrollLocation);
+      }
     }
   }
 
@@ -368,7 +369,11 @@ export class Scrollbar extends InfernoComponent {
     var scrollDelta = Math.abs(this.prevScrollLocation - location);
     this.prevScrollLocation = location;
     this.rightScrollLocation = this.props.maxOffset - location;
-    (_this$props$scrollLoc = (_this$props2 = this.props).scrollLocationChange) === null || _this$props$scrollLoc === void 0 ? void 0 : _this$props$scrollLoc.call(_this$props2, this.fullScrollProp, -location, scrollDelta >= 1);
+    (_this$props$scrollLoc = (_this$props2 = this.props).scrollLocationChange) === null || _this$props$scrollLoc === void 0 ? void 0 : _this$props$scrollLoc.call(_this$props2, {
+      fullScrollProp: this.fullScrollProp,
+      location: -location,
+      needFireScroll: scrollDelta >= 1
+    });
   }
 
   componentWillUpdate(nextProps, nextState, context) {
@@ -387,6 +392,7 @@ export class Scrollbar extends InfernoComponent {
       hovered: this.state.hovered,
       expanded: this.state.expanded,
       scrollbarRef: this.scrollbarRef,
+      scrollRef: this.scrollRef,
       thumbRef: this.thumbRef,
       axis: this.axis,
       fullScrollProp: this.fullScrollProp,

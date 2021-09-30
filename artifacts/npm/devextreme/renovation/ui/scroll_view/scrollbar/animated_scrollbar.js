@@ -1,7 +1,7 @@
 /**
 * DevExtreme (renovation/ui/scroll_view/scrollbar/animated_scrollbar.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -30,7 +30,7 @@ var _animated_scrollbar_props = require("../common/animated_scrollbar_props");
 
 var _index = require("../../../../events/utils/index");
 
-var _excluded = ["bottomPocketSize", "bounceEnabled", "containerHasSizes", "containerSize", "contentPaddingBottom", "contentSize", "direction", "forceGeneratePockets", "inertiaEnabled", "maxOffset", "minOffset", "onBounce", "onEnd", "onLock", "onPullDown", "onReachBottom", "onRelease", "onUnlock", "pullDownEnabled", "pulledDown", "reachBottomEnabled", "rtlEnabled", "scrollByThumb", "scrollLocation", "scrollLocationChange", "showScrollbar", "visible"];
+var _excluded = ["bottomPocketSize", "bounceEnabled", "containerHasSizes", "containerSize", "contentPaddingBottom", "contentSize", "direction", "forceGeneratePockets", "inertiaEnabled", "maxOffset", "minOffset", "onBounce", "onEnd", "onLock", "onPullDown", "onReachBottom", "onUnlock", "pullDownEnabled", "pulledDown", "reachBottomEnabled", "rtlEnabled", "scrollByThumb", "scrollLocation", "scrollLocationChange", "showScrollbar", "visible"];
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 
@@ -251,7 +251,6 @@ var AnimatedScrollbar = /*#__PURE__*/function (_InfernoComponent) {
     _this.loading = false;
     _this.state = {
       forceAnimationToBottomBound: false,
-      forceMoveToBound: false,
       pendingRefreshing: false,
       pendingLoading: false,
       pendingBounceAnimator: false,
@@ -370,11 +369,6 @@ var AnimatedScrollbar = /*#__PURE__*/function (_InfernoComponent) {
 
   _proto.bounceAnimatorStart = function bounceAnimatorStart() {
     if (!this.inRange && this.state.needRiseEnd && !(this.state.pendingBounceAnimator || this.state.pendingInertiaAnimator) && !(this.state.pendingRefreshing || this.state.pendingLoading) && -this.props.maxOffset > 0) {
-      this.setState(function (__state_argument) {
-        return {
-          forceMoveToBound: false
-        };
-      });
       this.start("bounce");
     }
   };
@@ -593,8 +587,6 @@ var AnimatedScrollbar = /*#__PURE__*/function (_InfernoComponent) {
   };
 
   _proto.releaseHandler = function releaseHandler() {
-    var _this$props$onRelease, _this$props7;
-
     if (this.props.forceGeneratePockets && this.props.reachBottomEnabled && (0, _math.inRange)(this.props.scrollLocation, this.maxOffset, this.props.maxOffset)) {
       this.setState(function (__state_argument) {
         return {
@@ -603,7 +595,6 @@ var AnimatedScrollbar = /*#__PURE__*/function (_InfernoComponent) {
       });
     }
 
-    (_this$props$onRelease = (_this$props7 = this.props).onRelease) === null || _this$props$onRelease === void 0 ? void 0 : _this$props$onRelease.call(_this$props7);
     this.setState(function (__state_argument) {
       return {
         wasRelease: true
@@ -632,7 +623,6 @@ var AnimatedScrollbar = /*#__PURE__*/function (_InfernoComponent) {
     return viewFunction({
       props: _extends({}, props),
       forceAnimationToBottomBound: this.state.forceAnimationToBottomBound,
-      forceMoveToBound: this.state.forceMoveToBound,
       pendingRefreshing: this.state.pendingRefreshing,
       pendingLoading: this.state.pendingLoading,
       pendingBounceAnimator: this.state.pendingBounceAnimator,
@@ -723,35 +713,34 @@ var AnimatedScrollbar = /*#__PURE__*/function (_InfernoComponent) {
   }, {
     key: "restAttributes",
     get: function get() {
-      var _this$props8 = this.props,
-          bottomPocketSize = _this$props8.bottomPocketSize,
-          bounceEnabled = _this$props8.bounceEnabled,
-          containerHasSizes = _this$props8.containerHasSizes,
-          containerSize = _this$props8.containerSize,
-          contentPaddingBottom = _this$props8.contentPaddingBottom,
-          contentSize = _this$props8.contentSize,
-          direction = _this$props8.direction,
-          forceGeneratePockets = _this$props8.forceGeneratePockets,
-          inertiaEnabled = _this$props8.inertiaEnabled,
-          maxOffset = _this$props8.maxOffset,
-          minOffset = _this$props8.minOffset,
-          onBounce = _this$props8.onBounce,
-          onEnd = _this$props8.onEnd,
-          onLock = _this$props8.onLock,
-          onPullDown = _this$props8.onPullDown,
-          onReachBottom = _this$props8.onReachBottom,
-          onRelease = _this$props8.onRelease,
-          onUnlock = _this$props8.onUnlock,
-          pullDownEnabled = _this$props8.pullDownEnabled,
-          pulledDown = _this$props8.pulledDown,
-          reachBottomEnabled = _this$props8.reachBottomEnabled,
-          rtlEnabled = _this$props8.rtlEnabled,
-          scrollByThumb = _this$props8.scrollByThumb,
-          scrollLocation = _this$props8.scrollLocation,
-          scrollLocationChange = _this$props8.scrollLocationChange,
-          showScrollbar = _this$props8.showScrollbar,
-          visible = _this$props8.visible,
-          restProps = _objectWithoutProperties(_this$props8, _excluded);
+      var _this$props7 = this.props,
+          bottomPocketSize = _this$props7.bottomPocketSize,
+          bounceEnabled = _this$props7.bounceEnabled,
+          containerHasSizes = _this$props7.containerHasSizes,
+          containerSize = _this$props7.containerSize,
+          contentPaddingBottom = _this$props7.contentPaddingBottom,
+          contentSize = _this$props7.contentSize,
+          direction = _this$props7.direction,
+          forceGeneratePockets = _this$props7.forceGeneratePockets,
+          inertiaEnabled = _this$props7.inertiaEnabled,
+          maxOffset = _this$props7.maxOffset,
+          minOffset = _this$props7.minOffset,
+          onBounce = _this$props7.onBounce,
+          onEnd = _this$props7.onEnd,
+          onLock = _this$props7.onLock,
+          onPullDown = _this$props7.onPullDown,
+          onReachBottom = _this$props7.onReachBottom,
+          onUnlock = _this$props7.onUnlock,
+          pullDownEnabled = _this$props7.pullDownEnabled,
+          pulledDown = _this$props7.pulledDown,
+          reachBottomEnabled = _this$props7.reachBottomEnabled,
+          rtlEnabled = _this$props7.rtlEnabled,
+          scrollByThumb = _this$props7.scrollByThumb,
+          scrollLocation = _this$props7.scrollLocation,
+          scrollLocationChange = _this$props7.scrollLocationChange,
+          showScrollbar = _this$props7.showScrollbar,
+          visible = _this$props7.visible,
+          restProps = _objectWithoutProperties(_this$props7, _excluded);
 
       return restProps;
     }

@@ -1,14 +1,14 @@
 /**
 * DevExtreme (cjs/ui/scheduler/classes.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 "use strict";
 
-exports.HORIZONTAL_GROUP_COUNT_CLASSES = exports.VERTICAL_GROUP_COUNT_CLASSES = exports.FIRST_GROUP_CELL_CLASS = exports.LAST_GROUP_CELL_CLASS = exports.GROUP_HEADER_CONTENT_CLASS = exports.GROUP_ROW_CLASS = exports.DATE_TABLE_ROW_CLASS = exports.DATE_TABLE_CLASS = exports.TIME_PANEL_CLASS = exports.VIRTUAL_CELL_CLASS = exports.HEADER_CURRENT_TIME_CELL_CLASS = exports.AGENDA_LAST_IN_DATE_APPOINTMENT_CLASS = exports.APPOINTMENT_CONTENT_CLASSES = exports.APPOINTMENT_ITEM_CLASS = exports.APPOINTMENT_DRAG_SOURCE_CLASS = exports.DIRECTION_APPOINTMENT_CLASSES = exports.REDUCED_APPOINTMENT_PARTS_CLASSES = exports.ALL_DAY_APPOINTMENT_CLASS = exports.EMPTY_APPOINTMENT_CLASS = exports.RECURRENCE_APPOINTMENT_CLASS = exports.REDUCED_APPOINTMENT_ICON = exports.REDUCED_APPOINTMENT_CLASS = exports.FIXED_CONTAINER_CLASS = void 0;
+exports.VERTICAL_GROUP_COUNT_CLASSES = exports.FIRST_GROUP_CELL_CLASS = exports.LAST_GROUP_CELL_CLASS = exports.GROUP_HEADER_CONTENT_CLASS = exports.GROUP_ROW_CLASS = exports.DATE_TABLE_ROW_CLASS = exports.DATE_TABLE_CLASS = exports.TIME_PANEL_CLASS = exports.VIRTUAL_CELL_CLASS = exports.HEADER_CURRENT_TIME_CELL_CLASS = exports.AGENDA_LAST_IN_DATE_APPOINTMENT_CLASS = exports.APPOINTMENT_CONTENT_CLASSES = exports.APPOINTMENT_ITEM_CLASS = exports.APPOINTMENT_DRAG_SOURCE_CLASS = exports.DIRECTION_APPOINTMENT_CLASSES = exports.REDUCED_APPOINTMENT_PARTS_CLASSES = exports.ALL_DAY_APPOINTMENT_CLASS = exports.EMPTY_APPOINTMENT_CLASS = exports.RECURRENCE_APPOINTMENT_CLASS = exports.REDUCED_APPOINTMENT_ICON = exports.REDUCED_APPOINTMENT_CLASS = exports.FIXED_CONTAINER_CLASS = void 0;
 var FIXED_CONTAINER_CLASS = 'dx-scheduler-fixed-appointments';
 exports.FIXED_CONTAINER_CLASS = FIXED_CONTAINER_CLASS;
 var REDUCED_APPOINTMENT_CLASS = 'dx-scheduler-appointment-reduced';
@@ -71,5 +71,3 @@ var FIRST_GROUP_CELL_CLASS = 'dx-scheduler-first-group-cell';
 exports.FIRST_GROUP_CELL_CLASS = FIRST_GROUP_CELL_CLASS;
 var VERTICAL_GROUP_COUNT_CLASSES = ['dx-scheduler-group-column-count-one', 'dx-scheduler-group-column-count-two', 'dx-scheduler-group-column-count-three'];
 exports.VERTICAL_GROUP_COUNT_CLASSES = VERTICAL_GROUP_COUNT_CLASSES;
-var HORIZONTAL_GROUP_COUNT_CLASSES = ['dx-scheduler-group-row-count-one', 'dx-scheduler-group-row-count-two', 'dx-scheduler-group-row-count-three'];
-exports.HORIZONTAL_GROUP_COUNT_CLASSES = HORIZONTAL_GROUP_COUNT_CLASSES;

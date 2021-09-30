@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/ui.scheduler.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1179,7 +1179,7 @@ var Scheduler = /*#__PURE__*/function (_Widget) {
   _proto._initExpressions = function _initExpressions(fields) {
     var _this5 = this;
 
-    this._dataAccessors = _utils2.utils.dataAccessors.create(this, fields, this._dataAccessors, (0, _config.default)().forceIsoDateParsing, function () {
+    this._dataAccessors = _utils2.utils.dataAccessors.create(fields, this._dataAccessors, (0, _config.default)().forceIsoDateParsing, function () {
       return _this5.option('dateSerializationFormat');
     }, function (value) {
       return _this5.option('dateSerializationFormat', value);

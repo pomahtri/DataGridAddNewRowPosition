@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/grids/data_grid/common/data_grid_props.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -194,8 +194,9 @@ export var DataGridProps = Object.create(Object.prototype, _extends(Object.getOw
       columnPageSize: 5,
       columnRenderingThreshold: 300,
       useNative: "auto",
-      newMode: true,
-      minGap: 1
+      prerenderedRowChunkSize: 1,
+      legacyMode: false,
+      prerenderedRowCount: 1
     };
   },
 

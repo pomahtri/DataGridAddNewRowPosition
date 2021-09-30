@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/grid_core/ui.grid_core.editing.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -119,7 +119,7 @@ var ACTION_OPTION_NAMES = {
 };
 var BUTTON_NAMES = ['edit', 'save', 'cancel', 'delete', 'undelete'];
 var EDITING_CHANGES_OPTION_NAME = 'editing.changes';
-var NEW_SCROLLING_MODE = 'scrolling.newMode';
+var LEGACY_SCROLLING_MODE = 'scrolling.legacyMode';
 
 var createFailureHandler = function createFailureHandler(deferred) {
   return function (arg) {
@@ -665,7 +665,7 @@ var EditingController = _uiGrid_core.default.ViewController.inherit(function () 
               var topItemIndex = (_dataController$topIt = dataController.topItemIndex) === null || _dataController$topIt === void 0 ? void 0 : _dataController$topIt.call(dataController);
               var bottomItemIndex = (_dataController$botto = dataController.bottomItemIndex) === null || _dataController$botto === void 0 ? void 0 : _dataController$botto.call(dataController);
 
-              if (this.option(NEW_SCROLLING_MODE) && (0, _type.isDefined)(topItemIndex)) {
+              if (this.option(LEGACY_SCROLLING_MODE) === false && (0, _type.isDefined)(topItemIndex)) {
                 return change.index >= topItemIndex && change.index <= bottomItemIndex || needInsertOnLastPosition;
               }
 
@@ -739,7 +739,7 @@ var EditingController = _uiGrid_core.default.ViewController.inherit(function () 
 
         var isInsert = change.type === _uiGrid_core3.DATA_EDIT_DATA_INSERT_TYPE;
 
-        if (!isInsert || _this8.needChangePageIndexToInsertRow()) {
+        if (!isInsert) {
           return;
         }
 
@@ -980,11 +980,6 @@ var EditingController = _uiGrid_core.default.ViewController.inherit(function () 
       var pageCount = dataController.pageCount();
       return newRowPosition === _uiGrid_core3.FIRST_NEW_ROW_POSITION && pageIndex !== 0 || newRowPosition === _uiGrid_core3.LAST_NEW_ROW_POSITION && pageIndex !== pageCount - 1;
     },
-    changePageIndexToInsertRow: function changePageIndexToInsertRow(insertChange) {
-      this._addInsertInfo(insertChange);
-
-      return this._dataController.pageIndex(insertChange.pageIndex);
-    },
     addRow: function addRow(parentKey) {
       var dataController = this._dataController;
       var store = dataController.store();
@@ -1046,43 +1041,37 @@ var EditingController = _uiGrid_core.default.ViewController.inherit(function () 
       };
       var d = new _deferred.Deferred();
 
+      var oldEditRowIndex = this._getVisibleEditRowIndex();
+
+      var insertInfo = this._addInsertInfo(change, parentKey);
+
+      var key = insertInfo.key;
+      var rowIndex = insertInfo.rowIndex;
+
+      this._setEditRowKey(key, true);
+
+      this._addChange(change);
+
       if (this.needChangePageIndexToInsertRow()) {
-        change = this._addChange(change);
-
-        var _this$_addInsertInfo = this._addInsertInfo(change, parentKey),
-            key = _this$_addInsertInfo.key;
-
-        this._setEditRowKey(key, true);
-
-        return this.changePageIndexToInsertRow(change).done(function () {
-          var rowIndex = _this12._dataController.getRowIndexByKey(key);
-
-          _this12._showAddedRow(rowIndex);
-
-          _this12._afterInsertRow(key);
+        this._dataController.pageIndex(change.pageIndex).done(function () {
+          rowIndex = _this12._dataController.getRowIndexByKey(key);
+          d.resolve();
         }).fail(d.reject);
       } else {
-        var oldEditRowIndex = this._getVisibleEditRowIndex();
-
-        var _this$_addInsertInfo2 = this._addInsertInfo(change, parentKey),
-            _key = _this$_addInsertInfo2.key,
-            rowIndex = _this$_addInsertInfo2.rowIndex;
-
-        this._setEditRowKey(_key, true);
-
-        this._addChange(change);
-
         this._dataController.updateItems({
           changeType: 'update',
           rowIndices: [initialOldEditRowIndex, oldEditRowIndex, rowIndex]
         });
 
-        this._showAddedRow(rowIndex);
-
-        this._afterInsertRow(_key);
+        d.resolve();
       }
 
-      return d.resolve();
+      d.done(function () {
+        _this12._showAddedRow(rowIndex);
+
+        _this12._afterInsertRow(key);
+      });
+      return d.promise();
     },
     _showAddedRow: function _showAddedRow(rowIndex) {
       this._focusFirstEditableCellInRow(rowIndex);
@@ -2404,24 +2393,6 @@ var editingModule = {
         init: function init() {
           this._editingController = this.getController('editing');
           this.callBase();
-        },
-        _fireChanged: function _fireChanged(e) {
-          var editingController = this._editingController;
-          var changes = editingController.getChanges();
-          var insertChanges = changes.filter(function (change) {
-            return change.type === 'insert';
-          });
-          var unprocessedInsertChanges = insertChanges.filter(function (change) {
-            var _editingController$_g;
-
-            return !((_editingController$_g = editingController._getInternalData(change.key)) !== null && _editingController$_g !== void 0 && _editingController$_g.insertInfo);
-          });
-          var lastInsertChange = unprocessedInsertChanges.length && unprocessedInsertChanges[insertChanges.length - 1];
-          this.callBase(e);
-
-          if (lastInsertChange && editingController.needChangePageIndexToInsertRow()) {
-            editingController.changePageIndexToInsertRow(lastInsertChange);
-          }
         },
         reload: function reload(full, repaintChangesOnly) {
           !repaintChangesOnly && this._editingController.refresh();

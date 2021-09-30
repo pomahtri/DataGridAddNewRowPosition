@@ -5,14 +5,21 @@ exports.drawCellsLines = drawCellsLines;
 exports.drawGridLines = drawGridLines;
 exports.getDocumentStyles = getDocumentStyles;
 exports.setDocumentStyles = setDocumentStyles;
+exports.drawTextInRect = drawTextInRect;
+exports.drawRect = drawRect;
+exports.drawLine = drawLine;
 
 var _type = require("../../../core/utils/type");
 
-var _pdf_utils_v = require("./pdf_utils_v3");
-
 var _extend = require("../../../core/utils/extend");
 
+var _pdf_utils_v = require("./pdf_utils_v3");
+
 var defaultBorderLineWidth = 1;
+
+function round(value) {
+  return Math.round(value * 1000) / 1000; // checked with browser zoom - 500%
+}
 
 function drawCellsContent(doc, cellsArray, docStyles) {
   cellsArray.forEach(function (cell) {
@@ -21,10 +28,58 @@ function drawCellsContent(doc, cellsArray, docStyles) {
   });
 }
 
+function drawLine(doc, startX, startY, endX, endY) {
+  doc.line(round(startX), round(startY), round(endX), round(endY));
+}
+
+function drawRect(doc, x, y, width, height, style) {
+  if ((0, _type.isDefined)(style)) {
+    doc.rect(round(x), round(y), round(width), round(height), style);
+  } else {
+    doc.rect(round(x), round(y), round(width), round(height));
+  }
+}
+
+function getLineHeightShift(doc) {
+  var DEFAULT_LINE_HEIGHT = 1.15; // TODO: check lineHeightFactor from text options. Currently supports only doc options - https://github.com/MrRio/jsPDF/issues/3234
+
+  return (doc.getLineHeightFactor() - DEFAULT_LINE_HEIGHT) * doc.getFontSize();
+}
+
+function drawTextInRect(doc, text, rect, verticalAlign, horizontalAlign, wordWrapEnabled, jsPdfTextOptions) {
+  var textArray = (0, _pdf_utils_v.getTextLines)(doc, text, doc.getFont(), {
+    wordWrapEnabled: wordWrapEnabled,
+    targetRectWidth: rect.w
+  });
+  var linesCount = textArray.length;
+  var heightOfOneLine = (0, _pdf_utils_v.calculateTextHeight)(doc, textArray[0], doc.getFont(), {
+    wordWrapEnabled: false
+  });
+  var vAlign = verticalAlign !== null && verticalAlign !== void 0 ? verticalAlign : 'middle';
+  var hAlign = horizontalAlign !== null && horizontalAlign !== void 0 ? horizontalAlign : 'left';
+  var verticalAlignCoefficientsMap = {
+    top: 0,
+    middle: 0.5,
+    bottom: 1
+  };
+  var horizontalAlignMap = {
+    left: 0,
+    center: 0.5,
+    right: 1
+  };
+  var y = rect.y + rect.h * verticalAlignCoefficientsMap[vAlign] - heightOfOneLine * (linesCount - 1) * verticalAlignCoefficientsMap[vAlign] + getLineHeightShift(doc);
+  var x = rect.x + rect.w * horizontalAlignMap[hAlign];
+  var textOptions = (0, _extend.extend)({
+    baseline: vAlign,
+    align: hAlign
+  }, jsPdfTextOptions);
+  doc.text(textArray.join('\n'), round(x), round(y), textOptions);
+}
+
 function drawCellBackground(doc, cell) {
   if ((0, _type.isDefined)(cell.backgroundColor)) {
     doc.setFillColor(cell.backgroundColor);
-    (0, _pdf_utils_v.drawRect)(doc, cell._rect.x, cell._rect.y, cell._rect.w, cell._rect.h, 'F');
+    drawRect(doc, cell._rect.x, cell._rect.y, cell._rect.w, cell._rect.h, 'F');
   }
 }
 
@@ -45,7 +100,7 @@ function drawCellText(doc, cell, docStyles) {
       w: _rect.w - (padding.left + padding.right),
       h: _rect.h - (padding.top + padding.bottom)
     };
-    (0, _pdf_utils_v.drawTextInRect)(doc, cell.text, textRect, cell.verticalAlign, cell.wordWrapEnabled, cell.jsPdfTextOptions);
+    drawTextInRect(doc, cell.text, textRect, cell.verticalAlign, cell.horizontalAlign, cell.wordWrapEnabled, cell.jsPdfTextOptions);
   }
 }
 
@@ -87,26 +142,26 @@ function drawBorders(doc, rect, _ref, docStyles) {
     setLinesStyles(doc, {
       borderColor: borderColor
     }, docStyles);
-    (0, _pdf_utils_v.drawRect)(doc, rect.x, rect.y, rect.w, rect.h);
+    drawRect(doc, rect.x, rect.y, rect.w, rect.h);
   } else {
     setLinesStyles(doc, {
       borderColor: borderColor
     }, docStyles);
 
     if (drawTopBorder) {
-      (0, _pdf_utils_v.drawLine)(doc, rect.x, rect.y, rect.x + rect.w, rect.y); // top
+      drawLine(doc, rect.x, rect.y, rect.x + rect.w, rect.y); // top
     }
 
     if (drawLeftBorder) {
-      (0, _pdf_utils_v.drawLine)(doc, rect.x, rect.y, rect.x, rect.y + rect.h); // left
+      drawLine(doc, rect.x, rect.y, rect.x, rect.y + rect.h); // left
     }
 
     if (drawRightBorder) {
-      (0, _pdf_utils_v.drawLine)(doc, rect.x + rect.w, rect.y, rect.x + rect.w, rect.y + rect.h); // right
+      drawLine(doc, rect.x + rect.w, rect.y, rect.x + rect.w, rect.y + rect.h); // right
     }
 
     if (drawBottomBorder) {
-      (0, _pdf_utils_v.drawLine)(doc, rect.x, rect.y + rect.h, rect.x + rect.w, rect.y + rect.h); // bottom
+      drawLine(doc, rect.x, rect.y + rect.h, rect.x + rect.w, rect.y + rect.h); // bottom
     }
   }
 }

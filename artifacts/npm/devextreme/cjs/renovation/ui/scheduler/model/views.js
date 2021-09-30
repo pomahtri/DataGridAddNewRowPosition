@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/model/views.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -113,7 +113,6 @@ var getCurrentViewConfig = function getCurrentViewConfig(currentViewProps, sched
   };
   return _extends({}, result, {
     hoursInterval: result.cellDuration / 60,
-    groups: [],
     selectedCellData: []
   });
 };

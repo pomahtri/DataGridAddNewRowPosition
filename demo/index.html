@@ -26,30 +26,32 @@
     <script type="text/javascript" src="demo/data.js" charset="utf-8"></script>
 </head>
 <body>
-    <div class="demo-container">
-        <div id="gridContainer"></div>
-        <div class="options">
-            <div class="caption">Options</div>
-            <div class="option-container">
-              <div class="option">
-                  <span>New Row Position</span>
-                  <div id="newRowPositionSelectBox"></div>
-              </div>
-              <div class="option">
-                  <span>Scrolling mode</span>
-                  <div id="scrollingModeSelectBox"></div>
-              </div>
+  <div class="demo-container">
+    <div id="gridContainer"></div>
+    <div class="options">
+        <div class="caption">Options</div>
+        <div class="option-container">
+          <div class="option">
+              <span>New Row Position</span>
+              <div id="newRowPositionSelectBox"></div>
           </div>
-        </div>
+          <div class="option">
+              <span>Scrolling mode</span>
+              <div id="scrollingModeSelectBox"></div>
+          </div>
+      </div>
     </div>
-    <script>
-        $(() => {
+</div>
+
+<script>
+  $(() => {
   const newRowPositionOptions = ['first', 'last', 'pageBottom', 'pageTop', 'viewportBottom', 'viewportTop'];
-  const scrollingModeOptions = ['infinite', 'standard', 'virtual'];
+  const scrollingModeOptions = ['standard', 'virtual'];
 
   const dataGrid = $('#gridContainer').dxDataGrid({
-    dataSource: generateData(100000),
+    dataSource,
     showBorders: true,
+    columnAutoWidth: true,
     editing: {
       allowAdding: true,
       allowDeleting: true,
@@ -59,29 +61,45 @@
       useIcons: true,
       newRowPosition: 'viewportTop',
     },
-    columns: ['id', 'firstName', 'lastName', 'gender', 'birthDate', {
-      type: 'buttons',
-      buttons: [{
-        icon: 'add',
-        onClick(e) {
-          const changes = dataGrid.option('editing.changes');
-          changes.push({
-            type: 'insert',
-            insertAfterKey: e.row.key,
-          });
-          dataGrid.option('editing.changes', changes);
-          dataGrid.editCell(e.row.rowIndex + 1, 'id');
-        },
-        visible({ row }) {
-          return !row.isEditing;
-        },
-      }, 'delete'],
-    }],
+    columns: [
+      {
+        dataField: 'OrderID',
+        allowEditing: false,
+      }, {
+        dataField: 'OrderDate',
+        dataType: 'date',
+        validationRules: [{ type: 'required' }],
+      }, 'ShipName', 'ShipCity', 'ShipPostalCode', 'ShipCountry', {
+        type: 'buttons',
+        buttons: [{
+          icon: 'add',
+          onClick(e) {
+            const changes = dataGrid.option('editing.changes');
+            const key = new DevExpress.data.Guid().toString();
+            changes.push({
+              key,
+              type: 'insert',
+              insertAfterKey: e.row.key,
+            });
+            dataGrid.option('editing.changes', changes);
+            dataGrid.option('editing', {
+              editColumnName: 'OrderDate',
+              editRowKey: key,
+            });
+          },
+          visible({ row }) {
+            return !row.isEditing;
+          },
+        }, 'delete'],
+      }],
     toolbar: {
       items: [{
         name: 'addRowButton',
         showText: 'always',
       }],
+    },
+    onRowInserted(e) {
+      e.component.navigateToRow(e.key);
     },
   }).dxDataGrid('instance');
 
@@ -101,46 +119,22 @@
     },
   }).dxSelectBox('instance');
 });
+const url = 'https://js.devexpress.com/Demos/Mvc/api/DataGridWebApi';
 
+const dataSource = DevExpress.data.AspNet.createStore({
+  key: 'OrderID',
+  loadUrl: `${url}/Orders`,
+  insertUrl: `${url}/InsertOrder`,
+  updateUrl: `${url}/UpdateOrder`,
+  deleteUrl: `${url}/DeleteOrder`,
+  onBeforeSend: (method, ajaxOptions) => {
+    ajaxOptions.xhrFields = { withCredentials: true };
+  },
+});
 
-        
-let s = 123456789;
-function random() {
-  s = (1103515245 * s + 12345) % 2147483647;
-  return s % (10 - 1);
-}
-
-function generateData(count) {
-  let i;
-  const surnames = ['Smith', 'Johnson', 'Brown', 'Taylor', 'Anderson', 'Harris', 'Clark', 'Allen', 'Scott', 'Carter'];
-  const names = ['James', 'John', 'Robert', 'Christopher', 'George', 'Mary', 'Nancy', 'Sandra', 'Michelle', 'Betty'];
-  const gender = ['Male', 'Female'];
-  const items = [];
-  const startBirthDate = Date.parse('1/1/1975');
-  const endBirthDate = Date.parse('1/1/1992');
-
-  for (i = 0; i < count; i += 1) {
-    const birthDate = new Date(startBirthDate + Math.floor(
-      (random() * (endBirthDate - startBirthDate)) / 10,
-    ));
-    birthDate.setHours(12);
-
-    const nameIndex = random();
-    const item = {
-      id: i + 1,
-      firstName: names[nameIndex],
-      lastName: surnames[random()],
-      gender: gender[Math.floor(nameIndex / 5)],
-      birthDate,
-    };
-    items.push(item);
-  }
-  return items;
-}
-
-    </script>
-    <style>
-        #gridContainer {
+</script>
+<style>
+  #gridContainer {
     max-height: 440px;
 }
 
@@ -185,6 +179,5 @@ function generateData(count) {
 #scrollingModeSelectBox {
   width: 150px;
 }
-    </style>
-</body>
+</style>
 </html>

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/html_editor/ui/tableForms.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -214,7 +214,7 @@ export var showTablePropertiesForm = (editorInstance, $table) => {
           text: localizationMessage.format('dxHtmlEditor-borderWidth')
         },
         editorOptions: {
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }, {
         itemType: 'simple',
@@ -251,7 +251,7 @@ export var showTablePropertiesForm = (editorInstance, $table) => {
         },
         editorOptions: {
           min: 0,
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }, {
         dataField: 'height',
@@ -260,7 +260,7 @@ export var showTablePropertiesForm = (editorInstance, $table) => {
         },
         editorOptions: {
           min: 0,
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }]
     }, {
@@ -408,7 +408,7 @@ export var showCellPropertiesForm = (editorInstance, $cell) => {
           text: localizationMessage.format('dxHtmlEditor-borderWidth')
         },
         editorOptions: {
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }, {
         itemType: 'simple',
@@ -445,7 +445,7 @@ export var showCellPropertiesForm = (editorInstance, $cell) => {
         },
         editorOptions: {
           min: 0,
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }, {
         dataField: 'height',
@@ -454,7 +454,7 @@ export var showCellPropertiesForm = (editorInstance, $cell) => {
         },
         editorOptions: {
           min: 0,
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }, {
         dataField: 'verticalPadding',
@@ -462,7 +462,7 @@ export var showCellPropertiesForm = (editorInstance, $cell) => {
           text: localizationMessage.format('dxHtmlEditor-paddingVertical')
         },
         editorOptions: {
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }, {
         label: {
@@ -470,7 +470,7 @@ export var showCellPropertiesForm = (editorInstance, $cell) => {
         },
         dataField: 'horizontalPadding',
         editorOptions: {
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }]
     }, {

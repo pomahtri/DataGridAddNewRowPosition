@@ -25,11 +25,13 @@ var _callbacks = _interopRequireDefault(require("../../core/utils/callbacks"));
 
 var _uiGridCore = require("./ui.grid.core.virtual_data_loader");
 
+var _type = require("../../core/utils/type");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var SCROLLING_MODE_INFINITE = 'infinite';
 var SCROLLING_MODE_VIRTUAL = 'virtual';
-var NEW_SCROLLING_MODE = 'scrolling.newMode';
+var LEGACY_SCROLLING_MODE = 'scrolling.legacyMode';
 
 var _isVirtualMode = function isVirtualMode(that) {
   return that.option('scrolling.mode') === SCROLLING_MODE_VIRTUAL || that._isVirtual;
@@ -145,7 +147,7 @@ var VirtualScrollController = _class.default.inherit(function () {
     ctor: function ctor(component, dataOptions, isVirtual) {
       this._dataOptions = dataOptions;
       this.component = component;
-      this._viewportSize = component.option(NEW_SCROLLING_MODE) ? 15 : 0;
+      this._viewportSize = component.option(LEGACY_SCROLLING_MODE) === false ? 15 : 0;
       this._viewportItemSize = 20;
       this._viewportItemIndex = 0;
       this._position = 0;
@@ -170,7 +172,7 @@ var VirtualScrollController = _class.default.inherit(function () {
         var dataOptions = this._dataOptions;
         var totalItemsCount = dataOptions.totalItemsCount();
 
-        if (this.option(NEW_SCROLLING_MODE) && totalItemsCount !== -1) {
+        if (this.option(LEGACY_SCROLLING_MODE) === false && totalItemsCount !== -1) {
           var viewportParams = this.getViewportParams();
           var loadedOffset = dataOptions.loadedOffset();
           var loadedItemCount = dataOptions.loadedItemCount();
@@ -186,16 +188,29 @@ var VirtualScrollController = _class.default.inherit(function () {
         return this._dataLoader.virtualItemsCount.apply(this._dataLoader, arguments);
       }
     },
+    getScrollingTimeout: function getScrollingTimeout() {
+      var renderAsync = this.option('scrolling.renderAsync');
+      var scrollingTimeout = 0;
+
+      if (!(0, _type.isDefined)(renderAsync)) {
+        scrollingTimeout = Math.min(this.option('scrolling.timeout') || 0, this._dataOptions.changingDuration());
+
+        if (scrollingTimeout < this.option('scrolling.renderingThreshold')) {
+          scrollingTimeout = this.option('scrolling.minTimeout') || 0;
+        }
+      } else if (renderAsync) {
+        var _this$option;
+
+        scrollingTimeout = (_this$option = this.option('scrolling.timeout')) !== null && _this$option !== void 0 ? _this$option : 0;
+      }
+
+      return scrollingTimeout;
+    },
     setViewportPosition: function setViewportPosition(position) {
       var _this = this;
 
       var result = new _deferred.Deferred();
-      var scrollingTimeout = Math.min(this.option('scrolling.timeout') || 0, this._dataOptions.changingDuration());
-
-      if (scrollingTimeout < this.option('scrolling.renderingThreshold')) {
-        scrollingTimeout = this.option('scrolling.minTimeout') || 0;
-      }
-
+      var scrollingTimeout = this.getScrollingTimeout();
       clearTimeout(this._scrollTimeoutID);
 
       if (scrollingTimeout > 0) {
@@ -318,7 +333,7 @@ var VirtualScrollController = _class.default.inherit(function () {
     setViewportItemIndex: function setViewportItemIndex(itemIndex) {
       this._viewportItemIndex = itemIndex;
 
-      if (this.option(NEW_SCROLLING_MODE)) {
+      if (this.option(LEGACY_SCROLLING_MODE) === false) {
         return;
       }
 
@@ -383,7 +398,7 @@ var VirtualScrollController = _class.default.inherit(function () {
       var bottomIndex = this._viewportSize + topIndex;
       var maxGap = this.option('scrolling.prerenderedRowChunkSize') || 1;
       var isScrollingBack = this.isScrollingBack();
-      var minGap = this.option('scrolling.minGap');
+      var minGap = this.option('scrolling.prerenderedRowCount');
       var topMinGap = isScrollingBack ? minGap : 0;
       var bottomMinGap = isScrollingBack ? 0 : minGap;
       var skip = Math.floor(Math.max(0, topIndex - topMinGap) / maxGap) * maxGap;

@@ -123,11 +123,6 @@ var Map = _ui2.default.inherit({
       routes: [],
       onRouteAdded: null,
       onRouteRemoved: null,
-      key: {
-        bing: '',
-        google: '',
-        googleStatic: ''
-      },
       apiKey: {
         bing: '',
         google: '',
@@ -155,15 +150,6 @@ var Map = _ui2.default.inherit({
         focusStateEnabled: true
       }
     }]);
-  },
-  _setDeprecatedOptions: function _setDeprecatedOptions() {
-    this.callBase();
-    (0, _extend.extend)(this._deprecatedOptions, {
-      'key': {
-        since: '20.2',
-        alias: 'apiKey'
-      }
-    });
   },
   _init: function _init() {
     this.callBase();
@@ -282,7 +268,6 @@ var Map = _ui2.default.inherit({
 
         break;
 
-      case 'key':
       case 'apiKey':
         _ui.default.log('W1001');
 

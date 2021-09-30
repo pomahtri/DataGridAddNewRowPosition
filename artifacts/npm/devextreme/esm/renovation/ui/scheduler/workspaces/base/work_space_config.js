@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/workspaces/base/work_space_config.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -28,7 +28,8 @@ var verticalViewConfig = {
   getDateForHeaderText,
   isRenderDateHeader: true,
   isGenerateWeekDaysHeaderData: false,
-  scrollingDirection: "vertical"
+  scrollingDirection: "vertical",
+  className: "dx-scheduler-work-space-day"
 };
 var timelineViewConfig = {
   headerPanelTemplate: TimelineHeaderPanelLayout,
@@ -41,11 +42,11 @@ var timelineViewConfig = {
   getDateForHeaderText: timelineGetDateFrHeaderText,
   isRenderDateHeader: true,
   isGenerateWeekDaysHeaderData: true,
-  scrollingDirection: "horizontal"
+  scrollingDirection: "horizontal",
+  className: "dx-scheduler-timeline-day ".concat(TIMELINE_CLASS)
 };
 
 var getDayViewConfig = intervalCount => _extends({}, verticalViewConfig, {
-  className: "dx-scheduler-work-space-day",
   isRenderDateHeader: intervalCount > 1
 });
 
@@ -73,7 +74,6 @@ var getMonthViewConfig = () => ({
 });
 
 var getTimelineDayViewConfig = intervalCount => _extends({}, timelineViewConfig, {
-  className: "dx-scheduler-timeline-day ".concat(TIMELINE_CLASS),
   isGenerateWeekDaysHeaderData: intervalCount > 1
 });
 

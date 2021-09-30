@@ -1,6 +1,7 @@
 "use strict";
 
 exports.convertToRenderFieldItemOptions = convertToRenderFieldItemOptions;
+exports.getLabelMarkText = getLabelMarkText;
 exports.convertToLabelMarkOptions = convertToLabelMarkOptions;
 
 var _extend = require("../../core/utils/extend");
@@ -40,7 +41,8 @@ function convertToRenderFieldItemOptions(_ref) {
       showColonAfterLabel = _ref.showColonAfterLabel,
       managerLabelLocation = _ref.managerLabelLocation,
       itemId = _ref.itemId,
-      managerMarkOptions = _ref.managerMarkOptions;
+      managerMarkOptions = _ref.managerMarkOptions,
+      labelMode = _ref.labelMode;
   var isRequired = (0, _type.isDefined)(item.isRequired) ? item.isRequired : !!_hasRequiredRuleInSet(item.validationRules);
   var isSimpleItem = item.itemType === _constants.SIMPLE_ITEM_TYPE;
   var helpID = item.helpText ? 'dx-' + new _guid.default() : null;
@@ -55,7 +57,8 @@ function convertToRenderFieldItemOptions(_ref) {
     labelLocation: managerLabelLocation
   });
 
-  var needRenderLabel = labelOptions.visible && labelOptions.text;
+  var isDefaultLabelMode = labelMode === 'default';
+  var needRenderLabel = labelOptions.visible && labelOptions.text && isDefaultLabelMode;
   var labelLocation = labelOptions.location,
       labelID = labelOptions.labelID;
   var labelNeedBaselineAlign = labelLocation !== 'top' && (!!item.helpText && !useFlexLayout || (0, _array.inArray)(item.editorType, ['dxTextArea', 'dxRadioGroup', 'dxCalendar', 'dxHtmlEditor']) !== -1);
@@ -88,16 +91,32 @@ function convertToRenderFieldItemOptions(_ref) {
       externalEditorOptions: item.editorOptions,
       editorInputId: itemId,
       editorValidationBoundary: editorValidationBoundary,
-      editorStylingMode: editorStylingMode
+      editorStylingMode: editorStylingMode,
+      labelMode: isDefaultLabelMode ? 'hidden' : labelMode,
+      labelText: isDefaultLabelMode ? undefined : labelOptions.text,
+      labelMark: getLabelMarkText(labelOptions.markOptions)
     })
   };
 }
 
-function convertToLabelMarkOptions(_ref2, isRequired) {
-  var showRequiredMark = _ref2.showRequiredMark,
+function getLabelMarkText(_ref2) {
+  var isRequiredMark = _ref2.isRequiredMark,
       requiredMark = _ref2.requiredMark,
-      showOptionalMark = _ref2.showOptionalMark,
+      isOptionalMark = _ref2.isOptionalMark,
       optionalMark = _ref2.optionalMark;
+
+  if (!isRequiredMark && !isOptionalMark) {
+    return '';
+  }
+
+  return String.fromCharCode(160) + (isRequiredMark ? requiredMark : optionalMark);
+}
+
+function convertToLabelMarkOptions(_ref3, isRequired) {
+  var showRequiredMark = _ref3.showRequiredMark,
+      requiredMark = _ref3.requiredMark,
+      showOptionalMark = _ref3.showOptionalMark,
+      optionalMark = _ref3.optionalMark;
   return {
     isRequiredMark: showRequiredMark && isRequired,
     requiredMark: requiredMark,
@@ -106,15 +125,18 @@ function convertToLabelMarkOptions(_ref2, isRequired) {
   };
 }
 
-function _convertToEditorOptions(_ref3) {
-  var editorType = _ref3.editorType,
-      defaultEditorName = _ref3.defaultEditorName,
-      editorValue = _ref3.editorValue,
-      canAssignUndefinedValueToEditor = _ref3.canAssignUndefinedValueToEditor,
-      externalEditorOptions = _ref3.externalEditorOptions,
-      editorInputId = _ref3.editorInputId,
-      editorValidationBoundary = _ref3.editorValidationBoundary,
-      editorStylingMode = _ref3.editorStylingMode;
+function _convertToEditorOptions(_ref4) {
+  var editorType = _ref4.editorType,
+      defaultEditorName = _ref4.defaultEditorName,
+      editorValue = _ref4.editorValue,
+      canAssignUndefinedValueToEditor = _ref4.canAssignUndefinedValueToEditor,
+      externalEditorOptions = _ref4.externalEditorOptions,
+      editorInputId = _ref4.editorInputId,
+      editorValidationBoundary = _ref4.editorValidationBoundary,
+      editorStylingMode = _ref4.editorStylingMode,
+      labelMode = _ref4.labelMode,
+      labelText = _ref4.labelText,
+      labelMark = _ref4.labelMark;
   var editorOptionsWithValue = {};
 
   if (editorValue !== undefined || canAssignUndefinedValueToEditor) {
@@ -130,7 +152,10 @@ function _convertToEditorOptions(_ref3) {
       id: editorInputId
     },
     validationBoundary: editorValidationBoundary,
-    stylingMode: editorStylingMode
+    stylingMode: editorStylingMode,
+    label: labelText,
+    labelMode: labelMode,
+    labelMark: labelMark
   });
 
   if (externalEditorOptions) {
@@ -165,13 +190,13 @@ function _hasRequiredRuleInSet(rules) {
   return hasRequiredRule;
 }
 
-function _convertToLabelOptions(_ref4) {
-  var item = _ref4.item,
-      id = _ref4.id,
-      isRequired = _ref4.isRequired,
-      managerMarkOptions = _ref4.managerMarkOptions,
-      showColonAfterLabel = _ref4.showColonAfterLabel,
-      labelLocation = _ref4.labelLocation;
+function _convertToLabelOptions(_ref5) {
+  var item = _ref5.item,
+      id = _ref5.id,
+      isRequired = _ref5.isRequired,
+      managerMarkOptions = _ref5.managerMarkOptions,
+      showColonAfterLabel = _ref5.showColonAfterLabel,
+      labelLocation = _ref5.labelLocation;
   var labelOptions = (0, _extend.extend)({
     showColon: showColonAfterLabel,
     location: labelLocation,

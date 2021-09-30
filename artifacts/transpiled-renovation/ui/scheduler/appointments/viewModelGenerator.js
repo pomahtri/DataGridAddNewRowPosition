@@ -46,13 +46,13 @@ var AppointmentViewModel = /*#__PURE__*/function () {
     this.renderingStrategy = new RenderingStrategy(options);
   };
 
-  _proto.generate = function generate(options) {
+  _proto.generate = function generate(filteredItems, options) {
     var isRenovatedAppointments = options.isRenovatedAppointments,
-        filteredItems = options.filteredItems,
         appointmentRenderingStrategyName = options.appointmentRenderingStrategyName;
     var appointments = filteredItems ? filteredItems.slice() : [];
     this.initRenderingStrategy(options);
-    var positionMap = this.getRenderingStrategy().createTaskPositionMap(appointments); // TODO - appointments are mutated inside!
+    var renderingStrategy = this.getRenderingStrategy();
+    var positionMap = renderingStrategy.createTaskPositionMap(appointments); // TODO - appointments are mutated inside!
 
     var viewModel = this.postProcess(appointments, positionMap, appointmentRenderingStrategyName, isRenovatedAppointments);
 

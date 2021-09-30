@@ -226,7 +226,7 @@ var showTablePropertiesForm = function showTablePropertiesForm(editorInstance, $
           text: _message.default.format('dxHtmlEditor-borderWidth')
         },
         editorOptions: {
-          placeholder: _message.default.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: _message.default.format('dxHtmlEditor-pixels')
         }
       }, {
         itemType: 'simple',
@@ -263,7 +263,7 @@ var showTablePropertiesForm = function showTablePropertiesForm(editorInstance, $
         },
         editorOptions: {
           min: 0,
-          placeholder: _message.default.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: _message.default.format('dxHtmlEditor-pixels')
         }
       }, {
         dataField: 'height',
@@ -272,7 +272,7 @@ var showTablePropertiesForm = function showTablePropertiesForm(editorInstance, $
         },
         editorOptions: {
           min: 0,
-          placeholder: _message.default.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: _message.default.format('dxHtmlEditor-pixels')
         }
       }]
     }, {
@@ -423,7 +423,7 @@ var showCellPropertiesForm = function showCellPropertiesForm(editorInstance, $ce
           text: _message.default.format('dxHtmlEditor-borderWidth')
         },
         editorOptions: {
-          placeholder: _message.default.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: _message.default.format('dxHtmlEditor-pixels')
         }
       }, {
         itemType: 'simple',
@@ -460,7 +460,7 @@ var showCellPropertiesForm = function showCellPropertiesForm(editorInstance, $ce
         },
         editorOptions: {
           min: 0,
-          placeholder: _message.default.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: _message.default.format('dxHtmlEditor-pixels')
         }
       }, {
         dataField: 'height',
@@ -469,7 +469,7 @@ var showCellPropertiesForm = function showCellPropertiesForm(editorInstance, $ce
         },
         editorOptions: {
           min: 0,
-          placeholder: _message.default.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: _message.default.format('dxHtmlEditor-pixels')
         }
       }, {
         dataField: 'verticalPadding',
@@ -477,7 +477,7 @@ var showCellPropertiesForm = function showCellPropertiesForm(editorInstance, $ce
           text: _message.default.format('dxHtmlEditor-paddingVertical')
         },
         editorOptions: {
-          placeholder: _message.default.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: _message.default.format('dxHtmlEditor-pixels')
         }
       }, {
         label: {
@@ -485,7 +485,7 @@ var showCellPropertiesForm = function showCellPropertiesForm(editorInstance, $ce
         },
         dataField: 'horizontalPadding',
         editorOptions: {
-          placeholder: _message.default.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: _message.default.format('dxHtmlEditor-pixels')
         }
       }]
     }, {

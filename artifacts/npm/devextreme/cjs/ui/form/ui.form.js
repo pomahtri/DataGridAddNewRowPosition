@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/form/ui.form.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -122,7 +122,8 @@ var Form = _ui.default.inherit({
       items: undefined,
       scrollingEnabled: false,
       validationGroup: undefined,
-      stylingMode: (0, _config.default)().editorStylingMode
+      stylingMode: (0, _config.default)().editorStylingMode,
+      labelMode: 'default'
     });
   },
   _defaultOptionsRules: function _defaultOptionsRules() {
@@ -153,14 +154,16 @@ var Form = _ui.default.inherit({
     var childLabelContentSelector = '> .' + _constants.FIELD_ITEM_LABEL_CLASS + ' > .' + _constants.FIELD_ITEM_LABEL_CONTENT_CLASS;
     return '.' + fieldItemClass + cssExcludeTabbedSelector + childLabelContentSelector;
   },
-  _getLabelText: function _getLabelText(labelText) {
+  _getLabelInnerHTML: function _getLabelInnerHTML(labelText) {
     var length = labelText.children.length;
     var child;
     var result = '';
     var i;
 
     for (i = 0; i < length; i++) {
-      child = labelText.children[i];
+      child = labelText.children[i]; // Was introduced in https://hg/mobile/rev/1f81a5afaab3 , "dxForm: fix test cafe tests":
+      // It's not clear why "$labelTexts[i].children[0].innerHTML" doesn't meet the needs.
+
       result = result + (!(0, _string.isEmpty)(child.innerText) ? child.innerText : child.innerHTML);
     }
 
@@ -174,8 +177,10 @@ var Form = _ui.default.inherit({
     var maxWidth = 0;
 
     for (i = 0; i < $labelTextsLength; i++) {
-      labelWidth = layoutManager._getLabelWidthByText({
-        text: this._getLabelText($labelTexts[i]),
+      labelWidth = layoutManager._getLabelWidthByInnerHTML({
+        // _hiddenLabelText was introduced in https://hg/mobile/rev/27b4f57f10bb , "dxForm: add alignItemLabelsInAllGroups and fix type script"
+        // It's not clear why $labelTexts.offsetWidth doesn't meet the needs
+        innerHTML: this._getLabelInnerHTML($labelTexts[i]),
         location: this._labelLocation()
       });
 
@@ -630,6 +635,7 @@ var Form = _ui.default.inherit({
       minColWidth: this.option('minColWidth'),
       showColonAfterLabel: this.option('showColonAfterLabel'),
       onEditorEnterKey: this.option('onEditorEnterKey'),
+      labelMode: this.option('labelMode'),
       onFieldDataChanged: function onFieldDataChanged(args) {
         if (!_this2._isDataUpdating) {
           _this2._triggerOnFieldDataChanged(args);
@@ -722,6 +728,7 @@ var Form = _ui.default.inherit({
       case 'colCount':
       case 'onEditorEnterKey':
       case 'labelLocation':
+      case 'labelMode':
       case 'alignItemLabels':
       case 'showColonAfterLabel':
       case 'customizeItem':

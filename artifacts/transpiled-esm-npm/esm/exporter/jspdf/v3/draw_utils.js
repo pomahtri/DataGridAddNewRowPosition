@@ -1,13 +1,65 @@
 import { isDefined } from '../../../core/utils/type';
-import { drawTextInRect, drawLine, drawRect } from './pdf_utils_v3';
 import { extend } from '../../../core/utils/extend';
+import { calculateTextHeight, getTextLines } from './pdf_utils_v3';
 var defaultBorderLineWidth = 1;
+
+function round(value) {
+  return Math.round(value * 1000) / 1000; // checked with browser zoom - 500%
+}
 
 function drawCellsContent(doc, cellsArray, docStyles) {
   cellsArray.forEach(cell => {
     drawCellBackground(doc, cell);
     drawCellText(doc, cell, docStyles);
   });
+}
+
+function drawLine(doc, startX, startY, endX, endY) {
+  doc.line(round(startX), round(startY), round(endX), round(endY));
+}
+
+function drawRect(doc, x, y, width, height, style) {
+  if (isDefined(style)) {
+    doc.rect(round(x), round(y), round(width), round(height), style);
+  } else {
+    doc.rect(round(x), round(y), round(width), round(height));
+  }
+}
+
+function getLineHeightShift(doc) {
+  var DEFAULT_LINE_HEIGHT = 1.15; // TODO: check lineHeightFactor from text options. Currently supports only doc options - https://github.com/MrRio/jsPDF/issues/3234
+
+  return (doc.getLineHeightFactor() - DEFAULT_LINE_HEIGHT) * doc.getFontSize();
+}
+
+function drawTextInRect(doc, text, rect, verticalAlign, horizontalAlign, wordWrapEnabled, jsPdfTextOptions) {
+  var textArray = getTextLines(doc, text, doc.getFont(), {
+    wordWrapEnabled,
+    targetRectWidth: rect.w
+  });
+  var linesCount = textArray.length;
+  var heightOfOneLine = calculateTextHeight(doc, textArray[0], doc.getFont(), {
+    wordWrapEnabled: false
+  });
+  var vAlign = verticalAlign !== null && verticalAlign !== void 0 ? verticalAlign : 'middle';
+  var hAlign = horizontalAlign !== null && horizontalAlign !== void 0 ? horizontalAlign : 'left';
+  var verticalAlignCoefficientsMap = {
+    top: 0,
+    middle: 0.5,
+    bottom: 1
+  };
+  var horizontalAlignMap = {
+    left: 0,
+    center: 0.5,
+    right: 1
+  };
+  var y = rect.y + rect.h * verticalAlignCoefficientsMap[vAlign] - heightOfOneLine * (linesCount - 1) * verticalAlignCoefficientsMap[vAlign] + getLineHeightShift(doc);
+  var x = rect.x + rect.w * horizontalAlignMap[hAlign];
+  var textOptions = extend({
+    baseline: vAlign,
+    align: hAlign
+  }, jsPdfTextOptions);
+  doc.text(textArray.join('\n'), round(x), round(y), textOptions);
 }
 
 function drawCellBackground(doc, cell) {
@@ -36,7 +88,7 @@ function drawCellText(doc, cell, docStyles) {
       w: _rect.w - (padding.left + padding.right),
       h: _rect.h - (padding.top + padding.bottom)
     };
-    drawTextInRect(doc, cell.text, textRect, cell.verticalAlign, cell.wordWrapEnabled, cell.jsPdfTextOptions);
+    drawTextInRect(doc, cell.text, textRect, cell.verticalAlign, cell.horizontalAlign, cell.wordWrapEnabled, cell.jsPdfTextOptions);
   }
 }
 
@@ -172,4 +224,4 @@ function setDocumentStyles(doc, styles) {
   }
 }
 
-export { drawCellsContent, drawCellsLines, drawGridLines, getDocumentStyles, setDocumentStyles };
+export { drawCellsContent, drawCellsLines, drawGridLines, getDocumentStyles, setDocumentStyles, drawTextInRect, drawRect, drawLine };

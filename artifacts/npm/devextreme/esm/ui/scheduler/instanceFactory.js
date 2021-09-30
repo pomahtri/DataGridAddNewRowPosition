@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scheduler/instanceFactory.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -10,7 +10,7 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 import { isDefined } from '../../core/utils/type';
 import { AppointmentDataProvider } from './appointments/DataProvider/appointmentDataProvider';
 import { ModelProvider } from './modelProvider';
-import { TimeZoneCalculator } from './timeZoneCalculator';
+import { TimeZoneCalculator } from '../../renovation/ui/scheduler/timeZoneCalculator/utils';
 import timeZoneUtils from './utils.timeZone';
 var Names = {
   timeZoneCalculator: 'timeZoneCalculator',

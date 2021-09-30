@@ -20,7 +20,7 @@ var _extend = require("../../../core/utils/extend");
 
 var _date = _interopRequireDefault(require("../../../core/utils/date"));
 
-var _semaphore = _interopRequireDefault(require("../semaphore"));
+var _semaphore = require("../../../renovation/ui/scheduler/semaphore");
 
 require("../recurrence_editor");
 
@@ -106,7 +106,7 @@ var AppointmentForm = /*#__PURE__*/function () {
   function AppointmentForm(scheduler) {
     this.scheduler = scheduler;
     this.form = null;
-    this.semaphore = new _semaphore.default();
+    this.semaphore = new _semaphore.Semaphore();
   }
 
   var _proto = AppointmentForm.prototype;

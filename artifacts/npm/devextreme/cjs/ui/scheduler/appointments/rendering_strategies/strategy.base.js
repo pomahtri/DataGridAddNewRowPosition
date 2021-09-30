@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/appointments/rendering_strategies/strategy.base.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -215,7 +215,7 @@ var BaseRenderingStrategy = /*#__PURE__*/function () {
   };
 
   _proto.isAppointmentTakesAllDay = function isAppointmentTakesAllDay(rawAppointment) {
-    return this.options.appointmentDataProvider.appointmentTakesAllDay(rawAppointment, this.viewStartDayHour, this.viewEndDayHour);
+    return this.appointmentDataProvider.appointmentTakesAllDay(rawAppointment, this.viewStartDayHour, this.viewEndDayHour);
   };
 
   _proto._getAppointmentParts = function _getAppointmentParts() {
@@ -793,12 +793,6 @@ var BaseRenderingStrategy = /*#__PURE__*/function () {
   };
 
   _createClass(BaseRenderingStrategy, [{
-    key: "instance",
-    get: function get() {
-      return this.options.instance;
-    } // TODO get rid of this
-
-  }, {
     key: "key",
     get: function get() {
       return this.options.key;
@@ -851,12 +845,12 @@ var BaseRenderingStrategy = /*#__PURE__*/function () {
   }, {
     key: "isGroupedByDate",
     get: function get() {
-      return this.options.getIsGroupedByDate();
+      return this.options.isGroupedByDate;
     }
   }, {
     key: "visibleDayDuration",
     get: function get() {
-      return this.options.getVisibleDayDuration();
+      return this.options.visibleDayDuration;
     }
   }, {
     key: "viewStartDayHour",
@@ -872,6 +866,11 @@ var BaseRenderingStrategy = /*#__PURE__*/function () {
     key: "cellDuration",
     get: function get() {
       return this.options.cellDuration;
+    }
+  }, {
+    key: "cellDurationInMinutes",
+    get: function get() {
+      return this.options.cellDurationInMinutes;
     }
   }, {
     key: "leftVirtualCellCount",
@@ -902,6 +901,51 @@ var BaseRenderingStrategy = /*#__PURE__*/function () {
     key: "groupOrientation",
     get: function get() {
       return this.options.groupOrientation;
+    }
+  }, {
+    key: "rowCount",
+    get: function get() {
+      return this.options.rowCount;
+    }
+  }, {
+    key: "groupCount",
+    get: function get() {
+      return this.options.groupCount;
+    }
+  }, {
+    key: "currentDate",
+    get: function get() {
+      return this.options.currentDate;
+    }
+  }, {
+    key: "appointmentCountPerCell",
+    get: function get() {
+      return this.options.appointmentCountPerCell;
+    }
+  }, {
+    key: "appointmentOffset",
+    get: function get() {
+      return this.options.appointmentOffset;
+    }
+  }, {
+    key: "allowResizing",
+    get: function get() {
+      return this.options.allowResizing;
+    }
+  }, {
+    key: "allowAllDayResizing",
+    get: function get() {
+      return this.options.allowAllDayResizing;
+    }
+  }, {
+    key: "viewDataProvider",
+    get: function get() {
+      return this.options.viewDataProvider;
+    }
+  }, {
+    key: "appointmentDataProvider",
+    get: function get() {
+      return this.options.appointmentDataProvider;
     }
   }, {
     key: "isVirtualScrolling",

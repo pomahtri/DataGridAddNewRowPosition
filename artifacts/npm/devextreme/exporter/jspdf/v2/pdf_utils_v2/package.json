@@ -1,5 +1,0 @@
-{
-  "sideEffects": false,
-  "main": "../../../../cjs/exporter/jspdf/v2/pdf_utils_v2.js",
-  "module": "../../../../esm/exporter/jspdf/v2/pdf_utils_v2.js"
-}

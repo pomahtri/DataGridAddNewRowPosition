@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/workspaces/base/work_space.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -11,14 +11,15 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 var _excluded = ["accessKey", "activeStateEnabled", "allDayAppointments", "allDayPanelExpanded", "allowMultipleCellSelection", "appointments", "cellDuration", "className", "crossScrollingEnabled", "currentDate", "dataCellTemplate", "dateCellTemplate", "disabled", "endDayHour", "firstDayOfWeek", "focusStateEnabled", "groupByDate", "groupOrientation", "groups", "height", "hint", "hoursInterval", "hoverStateEnabled", "indicatorTime", "indicatorUpdateInterval", "intervalCount", "onClick", "onKeyDown", "onViewRendered", "resourceCellTemplate", "rtlEnabled", "schedulerHeight", "schedulerWidth", "scrolling", "selectedCellData", "shadeUntilCurrentTime", "showAllDayPanel", "showCurrentTimeIndicator", "startDate", "startDayHour", "tabIndex", "timeCellTemplate", "type", "visible", "width"];
 import { createComponentVNode, normalizeProps } from "inferno";
 import { InfernoEffect, InfernoComponent } from "@devextreme/runtime/inferno";
+import { combineClasses } from "../../../../utils/combine_classes";
 import { OrdinaryLayout } from "./ordinary_layout";
 import ViewDataProvider from "../../../../../ui/scheduler/workspaces/view_model/view_data_provider";
 import { createCellElementMetaData, getTotalCellCount } from "./utils";
 import { WorkSpaceProps } from "../props";
 import { getViewRenderConfigByType } from "./work_space_config";
 import { isVerticalGroupingApplied } from "../utils";
-
-var prepareGenerationOptions = (workSpaceProps, renderConfig, isAllDayPanelVisible) => {
+import { CrossScrollingLayout } from "./cross_scrolling_layout";
+export var prepareGenerationOptions = (workSpaceProps, renderConfig, isAllDayPanelVisible) => {
   var {
     cellDuration,
     currentDate,
@@ -65,16 +66,21 @@ var prepareGenerationOptions = (workSpaceProps, renderConfig, isAllDayPanelVisib
     isGenerateWeekDaysHeaderData
   };
 };
-
 export var viewFunction = _ref => {
   var {
     allDayPanelRef,
+    classes,
     dateTableRef,
     dateTableTemplate,
     groupPanelData,
+    groupPanelHeight,
+    groupPanelRef,
+    headerEmptyCellWidth,
     headerPanelTemplate,
     isAllDayPanelVisible,
+    isRenderGroupPanel,
     isRenderHeaderEmptyCell,
+    isStandaloneAllDayPanel,
     layout: Layout,
     props: {
       allDayAppointments,
@@ -90,10 +96,10 @@ export var viewFunction = _ref => {
       timeCellTemplate
     },
     renderConfig: {
-      className,
       isRenderDateHeader,
       scrollingDirection
     },
+    timePanelRef,
     timePanelTemplate,
     viewDataProvider
   } = _ref;
@@ -117,10 +123,16 @@ export var viewFunction = _ref => {
     "isAllDayPanelVisible": isAllDayPanelVisible,
     "isRenderDateHeader": isRenderDateHeader,
     "isRenderHeaderEmptyCell": isRenderHeaderEmptyCell,
+    "isRenderGroupPanel": isRenderGroupPanel,
+    "isStandaloneAllDayPanel": isStandaloneAllDayPanel,
     "scrollingDirection": scrollingDirection,
-    "className": className,
+    "groupPanelHeight": groupPanelHeight,
+    "headerEmptyCellWidth": headerEmptyCellWidth,
+    "className": classes,
     "dateTableRef": dateTableRef,
     "allDayPanelRef": allDayPanelRef,
+    "timePanelRef": timePanelRef,
+    "groupPanelRef": groupPanelRef,
     "appointments": appointments,
     "allDayAppointments": allDayAppointments
   });
@@ -132,22 +144,51 @@ var getTemplate = TemplateProp => TemplateProp && (TemplateProp.defaultProps ? p
 export class WorkSpace extends InfernoComponent {
   constructor(props) {
     super(props);
-    this.state = {};
     this.dateTableRef = infernoCreateRef();
     this.allDayPanelRef = infernoCreateRef();
+    this.timePanelRef = infernoCreateRef();
+    this.groupPanelRef = infernoCreateRef();
+    this.state = {
+      groupPanelHeight: undefined,
+      headerEmptyCellWidth: undefined
+    };
+    this.groupPanelHeightEffect = this.groupPanelHeightEffect.bind(this);
+    this.headerEmptyCellWidthEffect = this.headerEmptyCellWidthEffect.bind(this);
     this.onViewRendered = this.onViewRendered.bind(this);
     this.createDateTableElementsMeta = this.createDateTableElementsMeta.bind(this);
     this.createAllDayPanelElementsMeta = this.createAllDayPanelElementsMeta.bind(this);
   }
 
   createEffects() {
-    return [new InfernoEffect(this.onViewRendered, [this.props.currentDate, this.props.endDayHour, this.props.groupOrientation, this.props.groups, this.props.hoursInterval, this.props.intervalCount, this.props.onViewRendered, this.props.startDayHour, this.props.type, this.props])];
+    return [new InfernoEffect(this.groupPanelHeightEffect, [this.state.groupPanelHeight, this.state.headerEmptyCellWidth, this.props.dataCellTemplate, this.props.dateCellTemplate, this.props.timeCellTemplate, this.props.resourceCellTemplate, this.props.intervalCount, this.props.groups, this.props.groupByDate, this.props.groupOrientation, this.props.crossScrollingEnabled, this.props.startDayHour, this.props.endDayHour, this.props.firstDayOfWeek, this.props.currentDate, this.props.startDate, this.props.hoursInterval, this.props.showAllDayPanel, this.props.allDayPanelExpanded, this.props.allowMultipleCellSelection, this.props.indicatorTime, this.props.indicatorUpdateInterval, this.props.shadeUntilCurrentTime, this.props.selectedCellData, this.props.scrolling, this.props.cellDuration, this.props.showCurrentTimeIndicator, this.props.schedulerHeight, this.props.schedulerWidth, this.props.type, this.props.onViewRendered, this.props.appointments, this.props.allDayAppointments, this.props.className, this.props.accessKey, this.props.activeStateEnabled, this.props.disabled, this.props.focusStateEnabled, this.props.height, this.props.hint, this.props.hoverStateEnabled, this.props.onClick, this.props.onKeyDown, this.props.rtlEnabled, this.props.tabIndex, this.props.visible, this.props.width]), new InfernoEffect(this.headerEmptyCellWidthEffect, [this.state.groupPanelHeight, this.state.headerEmptyCellWidth, this.props.dataCellTemplate, this.props.dateCellTemplate, this.props.timeCellTemplate, this.props.resourceCellTemplate, this.props.intervalCount, this.props.groups, this.props.groupByDate, this.props.groupOrientation, this.props.crossScrollingEnabled, this.props.startDayHour, this.props.endDayHour, this.props.firstDayOfWeek, this.props.currentDate, this.props.startDate, this.props.hoursInterval, this.props.showAllDayPanel, this.props.allDayPanelExpanded, this.props.allowMultipleCellSelection, this.props.indicatorTime, this.props.indicatorUpdateInterval, this.props.shadeUntilCurrentTime, this.props.selectedCellData, this.props.scrolling, this.props.cellDuration, this.props.showCurrentTimeIndicator, this.props.schedulerHeight, this.props.schedulerWidth, this.props.type, this.props.onViewRendered, this.props.appointments, this.props.allDayAppointments, this.props.className, this.props.accessKey, this.props.activeStateEnabled, this.props.disabled, this.props.focusStateEnabled, this.props.height, this.props.hint, this.props.hoverStateEnabled, this.props.onClick, this.props.onKeyDown, this.props.rtlEnabled, this.props.tabIndex, this.props.visible, this.props.width]), new InfernoEffect(this.onViewRendered, [this.props.currentDate, this.props.endDayHour, this.props.groupOrientation, this.props.groups, this.props.hoursInterval, this.props.intervalCount, this.props.onViewRendered, this.props.startDayHour, this.props.type, this.props])];
   }
 
   updateEffects() {
-    var _this$_effects$;
+    var _this$_effects$, _this$_effects$2, _this$_effects$3;
 
-    (_this$_effects$ = this._effects[0]) === null || _this$_effects$ === void 0 ? void 0 : _this$_effects$.update([this.props.currentDate, this.props.endDayHour, this.props.groupOrientation, this.props.groups, this.props.hoursInterval, this.props.intervalCount, this.props.onViewRendered, this.props.startDayHour, this.props.type, this.props]);
+    (_this$_effects$ = this._effects[0]) === null || _this$_effects$ === void 0 ? void 0 : _this$_effects$.update([this.state.groupPanelHeight, this.state.headerEmptyCellWidth, this.props.dataCellTemplate, this.props.dateCellTemplate, this.props.timeCellTemplate, this.props.resourceCellTemplate, this.props.intervalCount, this.props.groups, this.props.groupByDate, this.props.groupOrientation, this.props.crossScrollingEnabled, this.props.startDayHour, this.props.endDayHour, this.props.firstDayOfWeek, this.props.currentDate, this.props.startDate, this.props.hoursInterval, this.props.showAllDayPanel, this.props.allDayPanelExpanded, this.props.allowMultipleCellSelection, this.props.indicatorTime, this.props.indicatorUpdateInterval, this.props.shadeUntilCurrentTime, this.props.selectedCellData, this.props.scrolling, this.props.cellDuration, this.props.showCurrentTimeIndicator, this.props.schedulerHeight, this.props.schedulerWidth, this.props.type, this.props.onViewRendered, this.props.appointments, this.props.allDayAppointments, this.props.className, this.props.accessKey, this.props.activeStateEnabled, this.props.disabled, this.props.focusStateEnabled, this.props.height, this.props.hint, this.props.hoverStateEnabled, this.props.onClick, this.props.onKeyDown, this.props.rtlEnabled, this.props.tabIndex, this.props.visible, this.props.width]);
+    (_this$_effects$2 = this._effects[1]) === null || _this$_effects$2 === void 0 ? void 0 : _this$_effects$2.update([this.state.groupPanelHeight, this.state.headerEmptyCellWidth, this.props.dataCellTemplate, this.props.dateCellTemplate, this.props.timeCellTemplate, this.props.resourceCellTemplate, this.props.intervalCount, this.props.groups, this.props.groupByDate, this.props.groupOrientation, this.props.crossScrollingEnabled, this.props.startDayHour, this.props.endDayHour, this.props.firstDayOfWeek, this.props.currentDate, this.props.startDate, this.props.hoursInterval, this.props.showAllDayPanel, this.props.allDayPanelExpanded, this.props.allowMultipleCellSelection, this.props.indicatorTime, this.props.indicatorUpdateInterval, this.props.shadeUntilCurrentTime, this.props.selectedCellData, this.props.scrolling, this.props.cellDuration, this.props.showCurrentTimeIndicator, this.props.schedulerHeight, this.props.schedulerWidth, this.props.type, this.props.onViewRendered, this.props.appointments, this.props.allDayAppointments, this.props.className, this.props.accessKey, this.props.activeStateEnabled, this.props.disabled, this.props.focusStateEnabled, this.props.height, this.props.hint, this.props.hoverStateEnabled, this.props.onClick, this.props.onKeyDown, this.props.rtlEnabled, this.props.tabIndex, this.props.visible, this.props.width]);
+    (_this$_effects$3 = this._effects[2]) === null || _this$_effects$3 === void 0 ? void 0 : _this$_effects$3.update([this.props.currentDate, this.props.endDayHour, this.props.groupOrientation, this.props.groups, this.props.hoursInterval, this.props.intervalCount, this.props.onViewRendered, this.props.startDayHour, this.props.type, this.props]);
+  }
+
+  groupPanelHeightEffect() {
+    this.setState(__state_argument => {
+      var _this$dateTableRef$cu;
+
+      return {
+        groupPanelHeight: (_this$dateTableRef$cu = this.dateTableRef.current) === null || _this$dateTableRef$cu === void 0 ? void 0 : _this$dateTableRef$cu.getBoundingClientRect().height
+      };
+    });
+  }
+
+  headerEmptyCellWidthEffect() {
+    var _this$timePanelRef$cu, _this$timePanelRef$cu2, _this$groupPanelRef$c, _this$groupPanelRef$c2;
+
+    var timePanelWidth = (_this$timePanelRef$cu = (_this$timePanelRef$cu2 = this.timePanelRef.current) === null || _this$timePanelRef$cu2 === void 0 ? void 0 : _this$timePanelRef$cu2.getBoundingClientRect().width) !== null && _this$timePanelRef$cu !== void 0 ? _this$timePanelRef$cu : 0;
+    var groupPanelWidth = (_this$groupPanelRef$c = (_this$groupPanelRef$c2 = this.groupPanelRef.current) === null || _this$groupPanelRef$c2 === void 0 ? void 0 : _this$groupPanelRef$c2.getBoundingClientRect().width) !== null && _this$groupPanelRef$c !== void 0 ? _this$groupPanelRef$c : 0;
+    this.setState(__state_argument => ({
+      headerEmptyCellWidth: timePanelWidth + groupPanelWidth
+    }));
   }
 
   onViewRendered() {
@@ -187,7 +228,7 @@ export class WorkSpace extends InfernoComponent {
   }
 
   get layout() {
-    return this.props.crossScrollingEnabled ? OrdinaryLayout : OrdinaryLayout;
+    return this.props.crossScrollingEnabled ? CrossScrollingLayout : OrdinaryLayout;
   }
 
   get isAllDayPanelVisible() {
@@ -282,6 +323,51 @@ export class WorkSpace extends InfernoComponent {
     return isVerticalGrouping || !!this.timePanelTemplate;
   }
 
+  get isWorkSpaceWithOddCells() {
+    return false;
+  }
+
+  get classes() {
+    var {
+      allDayPanelExpanded,
+      groupByDate,
+      groupOrientation,
+      groups,
+      intervalCount
+    } = this.props;
+    return combineClasses({
+      [this.renderConfig.className]: true,
+      "dx-scheduler-work-space-count": intervalCount > 1,
+      "dx-scheduler-work-space-odd-cells": !!this.isWorkSpaceWithOddCells,
+      "dx-scheduler-work-space-all-day-collapsed": !allDayPanelExpanded && this.isAllDayPanelVisible,
+      "dx-scheduler-work-space-all-day": this.isAllDayPanelVisible,
+      "dx-scheduler-work-space-group-by-date": groupByDate,
+      "dx-scheduler-work-space-grouped": groups.length > 0,
+      "dx-scheduler-work-space-vertical-grouped": isVerticalGroupingApplied(groups, groupOrientation),
+      "dx-scheduler-group-column-count-one": isVerticalGroupingApplied(groups, groupOrientation) && groups.length === 1,
+      "dx-scheduler-group-column-count-two": isVerticalGroupingApplied(groups, groupOrientation) && groups.length === 2,
+      "dx-scheduler-group-column-count-three": isVerticalGroupingApplied(groups, groupOrientation) && groups.length === 3,
+      "dx-scheduler-work-space-both-scrollbar": this.props.crossScrollingEnabled,
+      "dx-scheduler-work-space": true
+    });
+  }
+
+  get isRenderGroupPanel() {
+    var {
+      groupOrientation,
+      groups
+    } = this.props;
+    return isVerticalGroupingApplied(groups, groupOrientation);
+  }
+
+  get isStandaloneAllDayPanel() {
+    var {
+      groupOrientation,
+      groups
+    } = this.props;
+    return !isVerticalGroupingApplied(groups, groupOrientation) && this.isAllDayPanelVisible;
+  }
+
   createDateTableElementsMeta(totalCellCount) {
     var dateTableCells = this.dateTableRef.current.querySelectorAll("td");
     var dateTableRect = this.dateTableRef.current.getBoundingClientRect();
@@ -329,8 +415,12 @@ export class WorkSpace extends InfernoComponent {
         timeCellTemplate: getTemplate(props.timeCellTemplate),
         resourceCellTemplate: getTemplate(props.resourceCellTemplate)
       }),
+      groupPanelHeight: this.state.groupPanelHeight,
+      headerEmptyCellWidth: this.state.headerEmptyCellWidth,
       dateTableRef: this.dateTableRef,
       allDayPanelRef: this.allDayPanelRef,
+      timePanelRef: this.timePanelRef,
+      groupPanelRef: this.groupPanelRef,
       renderConfig: this.renderConfig,
       layout: this.layout,
       isAllDayPanelVisible: this.isAllDayPanelVisible,
@@ -343,6 +433,10 @@ export class WorkSpace extends InfernoComponent {
       dateTableTemplate: this.dateTableTemplate,
       timePanelTemplate: this.timePanelTemplate,
       isRenderHeaderEmptyCell: this.isRenderHeaderEmptyCell,
+      isWorkSpaceWithOddCells: this.isWorkSpaceWithOddCells,
+      classes: this.classes,
+      isRenderGroupPanel: this.isRenderGroupPanel,
+      isStandaloneAllDayPanel: this.isStandaloneAllDayPanel,
       createDateTableElementsMeta: this.createDateTableElementsMeta,
       createAllDayPanelElementsMeta: this.createAllDayPanelElementsMeta,
       restAttributes: this.restAttributes

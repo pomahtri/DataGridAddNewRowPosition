@@ -1,7 +1,7 @@
 /**
 * DevExtreme (data/data_source.d.ts)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -131,7 +131,7 @@ export interface DataSourceOptions
      * @type Select expression
      * @public
      */
-    select?: SelectDescriptor<TValue> | Array<SelectDescriptor<TValue>>;
+    select?: SelectDescriptor<TValue>;
     /**
      * @docid
      * @type Sort expression
@@ -387,14 +387,14 @@ export default class DataSource
      * @return any
      * @public
      */
-    select(): SelectDescriptor<TValue> | Array<SelectDescriptor<TValue>>;
+    select(): SelectDescriptor<TValue>;
     /**
      * @docid
      * @publicName select(expr)
      * @param1 expr:any
      * @public
      */
-    select(expr: SelectDescriptor<TValue> | Array<SelectDescriptor<TValue>>): void;
+    select(expr: SelectDescriptor<TValue>): void;
     /**
      * @docid
      * @publicName sort()

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/appointments/DataProvider/appointmentDataProvider.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,6 +17,8 @@ var _appointmentFilter = require("./appointmentFilter");
 var _expressionUtils = require("../../expressionUtils");
 
 var _appointmentAdapter = require("../../appointmentAdapter");
+
+var _utils = require("./utils");
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
@@ -92,7 +94,7 @@ var AppointmentDataProvider = /*#__PURE__*/function () {
 
   _proto.appointmentTakesAllDay = function appointmentTakesAllDay(rawAppointment, startDayHour, endDayHour) {
     var adapter = (0, _appointmentAdapter.createAppointmentAdapter)(this.key, rawAppointment);
-    return this.getFilterStrategy().appointmentTakesAllDay(adapter, startDayHour, endDayHour);
+    return (0, _utils.getAppointmentTakesAllDay)(adapter, startDayHour, endDayHour);
   };
 
   _proto.hasAllDayAppointments = function hasAllDayAppointments(rawAppointments) {
@@ -120,7 +122,7 @@ var AppointmentDataProvider = /*#__PURE__*/function () {
 
   _proto.appointmentTakesSeveralDays = function appointmentTakesSeveralDays(rawAppointment) {
     var adapter = (0, _appointmentAdapter.createAppointmentAdapter)(this.key, rawAppointment);
-    return this.getFilterStrategy().appointmentTakesSeveralDays(adapter);
+    return (0, _utils.getAppointmentTakesSeveralDays)(adapter);
   };
 
   _proto.sortAppointmentsByStartDate = function sortAppointmentsByStartDate(appointments) {

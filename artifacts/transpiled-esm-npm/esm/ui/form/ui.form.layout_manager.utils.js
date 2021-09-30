@@ -26,7 +26,8 @@ export function convertToRenderFieldItemOptions(_ref) {
     showColonAfterLabel,
     managerLabelLocation,
     itemId,
-    managerMarkOptions
+    managerMarkOptions,
+    labelMode
   } = _ref;
   var isRequired = isDefined(item.isRequired) ? item.isRequired : !!_hasRequiredRuleInSet(item.validationRules);
   var isSimpleItem = item.itemType === SIMPLE_ITEM_TYPE;
@@ -42,7 +43,8 @@ export function convertToRenderFieldItemOptions(_ref) {
     labelLocation: managerLabelLocation
   });
 
-  var needRenderLabel = labelOptions.visible && labelOptions.text;
+  var isDefaultLabelMode = labelMode === 'default';
+  var needRenderLabel = labelOptions.visible && labelOptions.text && isDefaultLabelMode;
   var {
     location: labelLocation,
     labelID
@@ -77,17 +79,34 @@ export function convertToRenderFieldItemOptions(_ref) {
       externalEditorOptions: item.editorOptions,
       editorInputId: itemId,
       editorValidationBoundary,
-      editorStylingMode
+      editorStylingMode,
+      labelMode: isDefaultLabelMode ? 'hidden' : labelMode,
+      labelText: isDefaultLabelMode ? undefined : labelOptions.text,
+      labelMark: getLabelMarkText(labelOptions.markOptions)
     })
   };
 }
-export function convertToLabelMarkOptions(_ref2, isRequired) {
+export function getLabelMarkText(_ref2) {
+  var {
+    isRequiredMark,
+    requiredMark,
+    isOptionalMark,
+    optionalMark
+  } = _ref2;
+
+  if (!isRequiredMark && !isOptionalMark) {
+    return '';
+  }
+
+  return String.fromCharCode(160) + (isRequiredMark ? requiredMark : optionalMark);
+}
+export function convertToLabelMarkOptions(_ref3, isRequired) {
   var {
     showRequiredMark,
     requiredMark,
     showOptionalMark,
     optionalMark
-  } = _ref2;
+  } = _ref3;
   return {
     isRequiredMark: showRequiredMark && isRequired,
     requiredMark,
@@ -96,7 +115,7 @@ export function convertToLabelMarkOptions(_ref2, isRequired) {
   };
 }
 
-function _convertToEditorOptions(_ref3) {
+function _convertToEditorOptions(_ref4) {
   var {
     editorType,
     defaultEditorName,
@@ -105,8 +124,11 @@ function _convertToEditorOptions(_ref3) {
     externalEditorOptions,
     editorInputId,
     editorValidationBoundary,
-    editorStylingMode
-  } = _ref3;
+    editorStylingMode,
+    labelMode,
+    labelText,
+    labelMark
+  } = _ref4;
   var editorOptionsWithValue = {};
 
   if (editorValue !== undefined || canAssignUndefinedValueToEditor) {
@@ -122,7 +144,10 @@ function _convertToEditorOptions(_ref3) {
       id: editorInputId
     },
     validationBoundary: editorValidationBoundary,
-    stylingMode: editorStylingMode
+    stylingMode: editorStylingMode,
+    label: labelText,
+    labelMode: labelMode,
+    labelMark
   });
 
   if (externalEditorOptions) {
@@ -157,7 +182,7 @@ function _hasRequiredRuleInSet(rules) {
   return hasRequiredRule;
 }
 
-function _convertToLabelOptions(_ref4) {
+function _convertToLabelOptions(_ref5) {
   var {
     item,
     id,
@@ -165,7 +190,7 @@ function _convertToLabelOptions(_ref4) {
     managerMarkOptions,
     showColonAfterLabel,
     labelLocation
-  } = _ref4;
+  } = _ref5;
   var labelOptions = extend({
     showColon: showColonAfterLabel,
     location: labelLocation,

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scheduler/appointments/rendering_strategies/strategy_agenda.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -14,12 +14,12 @@ import { ExpressionUtils } from '../../expressionUtils';
 import { groupAppointmentsByResources } from '../../resources/utils';
 
 class AgendaRenderingStrategy extends BaseRenderingStrategy {
-  get agendaDuration() {
-    return this.options.agendaDuration;
+  get instance() {
+    return this.options.instance;
   }
 
-  get currentDate() {
-    return this.options.currentDate;
+  get agendaDuration() {
+    return this.options.agendaDuration;
   }
 
   getAppointmentMinSize() {}

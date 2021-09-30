@@ -206,7 +206,7 @@ export var showTablePropertiesForm = (editorInstance, $table) => {
           text: localizationMessage.format('dxHtmlEditor-borderWidth')
         },
         editorOptions: {
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }, {
         itemType: 'simple',
@@ -243,7 +243,7 @@ export var showTablePropertiesForm = (editorInstance, $table) => {
         },
         editorOptions: {
           min: 0,
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }, {
         dataField: 'height',
@@ -252,7 +252,7 @@ export var showTablePropertiesForm = (editorInstance, $table) => {
         },
         editorOptions: {
           min: 0,
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }]
     }, {
@@ -400,7 +400,7 @@ export var showCellPropertiesForm = (editorInstance, $cell) => {
           text: localizationMessage.format('dxHtmlEditor-borderWidth')
         },
         editorOptions: {
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }, {
         itemType: 'simple',
@@ -437,7 +437,7 @@ export var showCellPropertiesForm = (editorInstance, $cell) => {
         },
         editorOptions: {
           min: 0,
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }, {
         dataField: 'height',
@@ -446,7 +446,7 @@ export var showCellPropertiesForm = (editorInstance, $cell) => {
         },
         editorOptions: {
           min: 0,
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }, {
         dataField: 'verticalPadding',
@@ -454,7 +454,7 @@ export var showCellPropertiesForm = (editorInstance, $cell) => {
           text: localizationMessage.format('dxHtmlEditor-paddingVertical')
         },
         editorOptions: {
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }, {
         label: {
@@ -462,7 +462,7 @@ export var showCellPropertiesForm = (editorInstance, $cell) => {
         },
         dataField: 'horizontalPadding',
         editorOptions: {
-          placeholder: localizationMessage.format('dxHtmlEditor-dxHtmlEditor-pixels')
+          placeholder: localizationMessage.format('dxHtmlEditor-pixels')
         }
       }]
     }, {

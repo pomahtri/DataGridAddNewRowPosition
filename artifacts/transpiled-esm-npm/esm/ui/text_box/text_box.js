@@ -1,3 +1,4 @@
+import { getWidth, getOuterWidth } from '../../core/utils/size';
 import $ from '../../core/renderer';
 import { getWindow } from '../../core/utils/window';
 var window = getWindow();
@@ -77,6 +78,18 @@ var TextBox = TextEditor.inherit({
     var $searchIcon = $('<div>').addClass(ICON_CLASS).addClass(SEARCH_ICON_CLASS);
     $searchIcon.prependTo(this._input().parent());
     this._$searchIcon = $searchIcon;
+  },
+  _renderLabel: function _renderLabel() {
+    this.callBase();
+
+    if (this._$searchIcon && this._$label) {
+      var labelBeforeElement = this._$label.find('.dx-label-before');
+
+      var labelBeforeWidth = getWidth(labelBeforeElement) + getOuterWidth(this._$searchIcon);
+      labelBeforeElement.css('width', labelBeforeWidth);
+
+      this._$label.find('.dx-label').css('max-width', getWidth(this._input().parent()) - labelBeforeWidth);
+    }
   },
   _optionChanged: function _optionChanged(args) {
     switch (args.name) {

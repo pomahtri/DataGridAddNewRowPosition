@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/text_box/ui.text_editor.base.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,6 +9,8 @@
 "use strict";
 
 exports.default = void 0;
+
+var _size = require("../../core/utils/size");
 
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 
@@ -51,11 +53,14 @@ var _load_indicator = _interopRequireDefault(require("../load_indicator"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var TEXTEDITOR_CLASS = 'dx-texteditor';
+var TEXTEDITOR_WITH_LABEL_CLASS = 'dx-texteditor-with-label';
+var TEXTEDITOR_WITH_FLOATING_LABEL_CLASS = 'dx-texteditor-with-floating-label';
 var TEXTEDITOR_INPUT_CONTAINER_CLASS = 'dx-texteditor-input-container';
 var TEXTEDITOR_INPUT_CLASS = 'dx-texteditor-input';
 var TEXTEDITOR_INPUT_SELECTOR = '.' + TEXTEDITOR_INPUT_CLASS;
 var TEXTEDITOR_CONTAINER_CLASS = 'dx-texteditor-container';
 var TEXTEDITOR_BUTTONS_CONTAINER_CLASS = 'dx-texteditor-buttons-container';
+var TEXTEDITOR_LABEL_CLASS = 'dx-texteditor-label';
 var TEXTEDITOR_PLACEHOLDER_CLASS = 'dx-placeholder';
 var TEXTEDITOR_EMPTY_INPUT_CLASS = 'dx-texteditor-empty';
 var STATE_INVISIBLE_CLASS = 'dx-state-invisible';
@@ -94,7 +99,6 @@ var TextEditorBase = _editor.default.inherit({
       onFocusIn: null,
       onFocusOut: null,
       onKeyDown: null,
-      onKeyPress: null,
       onKeyUp: null,
       onChange: null,
       onInput: null,
@@ -110,7 +114,10 @@ var TextEditorBase = _editor.default.inherit({
         return (0, _type.isDefined)(value) && value !== false ? value : '';
       },
       stylingMode: (0, _config.default)().editorStylingMode || 'outlined',
-      showValidationMark: true
+      showValidationMark: true,
+      label: '',
+      labelMode: 'static',
+      labelMark: ''
     });
   },
   _defaultOptionsRules: function _defaultOptionsRules() {
@@ -120,18 +127,10 @@ var TextEditorBase = _editor.default.inherit({
         return (0, _themes.isMaterial)(themeName);
       },
       options: {
-        stylingMode: (0, _config.default)().editorStylingMode || 'filled'
+        stylingMode: (0, _config.default)().editorStylingMode || 'filled',
+        labelMode: 'floating'
       }
     }]);
-  },
-  _setDeprecatedOptions: function _setDeprecatedOptions() {
-    this.callBase();
-    (0, _extend.extend)(this._deprecatedOptions, {
-      'onKeyPress': {
-        since: '20.1',
-        message: 'This event is removed from the web standards and will be deprecated in modern browsers soon.'
-      }
-    });
   },
   _getDefaultButtons: function _getDefaultButtons() {
     return [{
@@ -178,6 +177,8 @@ var TextEditorBase = _editor.default.inherit({
     this.callBase();
 
     this._renderValue();
+
+    this._renderLabel();
   },
   _render: function _render() {
     this.callBase();
@@ -408,6 +409,38 @@ var TextEditorBase = _editor.default.inherit({
   },
   _toggleSpellcheckState: function _toggleSpellcheckState() {
     this._input().prop('spellcheck', this.option('spellcheck'));
+  },
+  _renderLabel: function _renderLabel() {
+    var TEXTEDITOR_WITH_BEFORE_BUTTONS_CLASS = 'dx-texteditor-with-before-buttons';
+    var labelElement = this.$element().find('.' + TEXTEDITOR_LABEL_CLASS);
+
+    if (!this.label && labelElement.length === 1 || labelElement.length === 2) {
+      labelElement.first().remove();
+    }
+
+    if (this._$label) {
+      this._$label.remove();
+
+      this._$label = null;
+    }
+
+    this.$element().removeClass(TEXTEDITOR_WITH_LABEL_CLASS).removeClass(TEXTEDITOR_WITH_FLOATING_LABEL_CLASS).removeClass(TEXTEDITOR_WITH_BEFORE_BUTTONS_CLASS);
+    if (!this.option('label') || this.option('labelMode') === 'hidden') return;
+    this.$element().addClass(this.option('labelMode') === 'floating' ? TEXTEDITOR_WITH_FLOATING_LABEL_CLASS : TEXTEDITOR_WITH_LABEL_CLASS);
+    var labelText = this.option('label');
+    var labelMark = this.option('labelMark');
+    var $label = this._$label = (0, _renderer.default)('<div>').addClass(TEXTEDITOR_LABEL_CLASS).html("<div class=\"dx-label-before\"></div><div class=\"dx-label\"><span data-mark=\"".concat(labelMark, "\">").concat(labelText, "</span></div><div class=\"dx-label-after\"></div>"));
+    $label.appendTo(this.$element());
+
+    if (this._$beforeButtonsContainer) {
+      this.$element().addClass(TEXTEDITOR_WITH_BEFORE_BUTTONS_CLASS);
+
+      this._$label.find('.dx-label-before').css('width', (0, _size.getWidth)(this._$beforeButtonsContainer));
+    }
+
+    var labelWidth = this._$field ? (0, _size.getWidth)(this._$field) : this._$tagsContainer ? (0, _size.getWidth)(this._$tagsContainer) : (0, _size.getWidth)(this._input());
+
+    this._$label.find('.dx-label').css('maxWidth', labelWidth);
   },
   _renderPlaceholder: function _renderPlaceholder() {
     this._renderPlaceholderMarkup();
@@ -690,6 +723,20 @@ var TextEditorBase = _editor.default.inherit({
 
         break;
 
+      case 'label':
+      case 'labelMode':
+      case 'labelMark':
+        this._renderLabel();
+
+        break;
+
+      case 'width':
+        this.callBase(args);
+
+        this._renderLabel();
+
+        break;
+
       case 'readOnly':
       case 'disabled':
         this._updateButtons();
@@ -718,6 +765,8 @@ var TextEditorBase = _editor.default.inherit({
 
       case 'stylingMode':
         this._renderStylingMode();
+
+        this._renderLabel();
 
         break;
 

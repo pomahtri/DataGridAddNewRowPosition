@@ -66,7 +66,8 @@ var Form = Widget.inherit({
       items: undefined,
       scrollingEnabled: false,
       validationGroup: undefined,
-      stylingMode: config().editorStylingMode
+      stylingMode: config().editorStylingMode,
+      labelMode: 'default'
     });
   },
   _defaultOptionsRules: function _defaultOptionsRules() {
@@ -97,14 +98,16 @@ var Form = Widget.inherit({
     var childLabelContentSelector = '> .' + FIELD_ITEM_LABEL_CLASS + ' > .' + FIELD_ITEM_LABEL_CONTENT_CLASS;
     return '.' + fieldItemClass + cssExcludeTabbedSelector + childLabelContentSelector;
   },
-  _getLabelText: function _getLabelText(labelText) {
+  _getLabelInnerHTML: function _getLabelInnerHTML(labelText) {
     var length = labelText.children.length;
     var child;
     var result = '';
     var i;
 
     for (i = 0; i < length; i++) {
-      child = labelText.children[i];
+      child = labelText.children[i]; // Was introduced in https://hg/mobile/rev/1f81a5afaab3 , "dxForm: fix test cafe tests":
+      // It's not clear why "$labelTexts[i].children[0].innerHTML" doesn't meet the needs.
+
       result = result + (!isEmpty(child.innerText) ? child.innerText : child.innerHTML);
     }
 
@@ -118,8 +121,10 @@ var Form = Widget.inherit({
     var maxWidth = 0;
 
     for (i = 0; i < $labelTextsLength; i++) {
-      labelWidth = layoutManager._getLabelWidthByText({
-        text: this._getLabelText($labelTexts[i]),
+      labelWidth = layoutManager._getLabelWidthByInnerHTML({
+        // _hiddenLabelText was introduced in https://hg/mobile/rev/27b4f57f10bb , "dxForm: add alignItemLabelsInAllGroups and fix type script"
+        // It's not clear why $labelTexts.offsetWidth doesn't meet the needs
+        innerHTML: this._getLabelInnerHTML($labelTexts[i]),
         location: this._labelLocation()
       });
 
@@ -570,6 +575,7 @@ var Form = Widget.inherit({
       minColWidth: this.option('minColWidth'),
       showColonAfterLabel: this.option('showColonAfterLabel'),
       onEditorEnterKey: this.option('onEditorEnterKey'),
+      labelMode: this.option('labelMode'),
       onFieldDataChanged: args => {
         if (!this._isDataUpdating) {
           this._triggerOnFieldDataChanged(args);
@@ -664,6 +670,7 @@ var Form = Widget.inherit({
       case 'colCount':
       case 'onEditorEnterKey':
       case 'labelLocation':
+      case 'labelMode':
       case 'alignItemLabels':
       case 'showColonAfterLabel':
       case 'customizeItem':

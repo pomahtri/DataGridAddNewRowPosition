@@ -1,14 +1,14 @@
 /**
 * DevExtreme (esm/ui/grid_core/ui.grid.core.virtual_data_loader.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import { Deferred, when } from '../../core/utils/deferred';
 import { isObject, isString } from '../../core/utils/type';
-var NEW_SCROLLING_MODE = 'scrolling.newMode';
+var LEGACY_SCROLLING_MODE = 'scrolling.legacyMode';
 
 var needTwoPagesLoading = that => that.option('scrolling.loadTwoPagesOnStart') || that._controller.isVirtual() || that._controller.getViewportItemIndex() > 0;
 
@@ -254,7 +254,7 @@ export class VirtualDataLoader {
 
     var isAppendMode = this._controller.isAppendMode();
 
-    if (!this.option(NEW_SCROLLING_MODE) && (isVirtualMode || isAppendMode)) {
+    if (this.option(LEGACY_SCROLLING_MODE) !== false && (isVirtualMode || isAppendMode)) {
       if (pageIndex !== undefined) {
         this._pageIndex = pageIndex;
       }
@@ -292,7 +292,7 @@ export class VirtualDataLoader {
 
     var isAppendMode = this._controller.isAppendMode();
 
-    if (!this.option(NEW_SCROLLING_MODE) && (isVirtualMode || isAppendMode)) {
+    if (this.option(LEGACY_SCROLLING_MODE) !== false && (isVirtualMode || isAppendMode)) {
       var pageIndexForLoad = getPageIndexForLoad(this);
 
       if (pageIndexForLoad >= 0) {
@@ -353,7 +353,7 @@ export class VirtualDataLoader {
 
     if (e && e.changes) {
       fireChanged(this, callBase, e);
-    } else if (!this.option(NEW_SCROLLING_MODE) && (isVirtualMode || isAppendMode)) {
+    } else if (this.option(LEGACY_SCROLLING_MODE) !== false && (isVirtualMode || isAppendMode)) {
       var beginPageIndex = getBeginPageIndex(this);
 
       if (beginPageIndex >= 0) {

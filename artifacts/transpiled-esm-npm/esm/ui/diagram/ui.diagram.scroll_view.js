@@ -2,6 +2,7 @@ import { getWidth, getHeight } from '../../core/utils/size';
 import $ from '../../core/renderer';
 import Widget from '../widget/ui.widget';
 import ScrollView from '../scroll_view';
+import { calculateScrollbarWidth } from '../pivot_grid/utils/calculate_scrollbar_width';
 import { getDiagram } from './diagram.importer';
 
 class DiagramScrollView extends Widget {
@@ -20,7 +21,7 @@ class DiagramScrollView extends Widget {
     super._initMarkup();
 
     var $scrollViewWrapper = $('<div>').appendTo(this.$element());
-    this._scrollView = this._createComponent($scrollViewWrapper, ScrollView, {
+    var options = {
       direction: 'both',
       bounceEnabled: false,
       onScroll: _ref => {
@@ -30,7 +31,14 @@ class DiagramScrollView extends Widget {
 
         this._raiseOnScroll(scrollOffset.left, scrollOffset.top);
       }
-    });
+    };
+    var useNativeScrolling = this.option('useNativeScrolling');
+
+    if (useNativeScrolling !== undefined) {
+      options.useNative = useNativeScrolling;
+    }
+
+    this._scrollView = this._createComponent($scrollViewWrapper, ScrollView, options);
 
     this._onCreateDiagramAction({
       $parent: $(this._scrollView.content()),
@@ -71,7 +79,7 @@ class DiagramScrollView extends Widget {
   }
 
   getScrollBarWidth() {
-    return 0;
+    return this.option('useNativeScrolling') ? calculateScrollbarWidth() : 0;
   }
 
   detachEvents() {}
@@ -103,6 +111,9 @@ class DiagramScrollView extends Widget {
       case 'onCreateDiagram':
         this._createOnCreateDiagramAction();
 
+        break;
+
+      case 'useNativeScrolling':
         break;
 
       default:

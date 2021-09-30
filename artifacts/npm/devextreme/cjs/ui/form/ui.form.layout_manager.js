@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/form/ui.form.layout_manager.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -107,6 +107,7 @@ var LayoutManager = _ui.default.inherit({
       screenByWidth: null,
       showOptionalMark: false,
       requiredMark: '*',
+      labelMode: 'default',
       optionalMark: _message.default.format('dxForm-optionalMark'),
       requiredMessage: _message.default.getFormatter('dxForm-requiredMessage')
     });
@@ -654,7 +655,8 @@ var LayoutManager = _ui.default.inherit({
       managerLabelLocation: this.option('labelLocation'),
       template: item.template ? this._getTemplate(item.template) : null,
       itemId: this.option('form') && this.option('form').getItemID(name),
-      managerMarkOptions: this._getMarkOptions()
+      managerMarkOptions: this._getMarkOptions(),
+      labelMode: this.option('labelMode')
     })),
         $fieldEditorContainer = _renderFieldItem2.$fieldEditorContainer,
         widgetInstance = _renderFieldItem2.widgetInstance,
@@ -672,11 +674,11 @@ var LayoutManager = _ui.default.inherit({
       $itemContainer: $rootElement
     });
   },
-  _getLabelWidthByText: function _getLabelWidthByText(_ref4) {
-    var text = _ref4.text,
+  _getLabelWidthByInnerHTML: function _getLabelWidthByInnerHTML(_ref4) {
+    var innerHTML = _ref4.innerHTML,
         location = _ref4.location;
-    return (0, _label.getLabelWidthByText)({
-      text: text,
+    return (0, _label.getLabelWidthByInnerHTML)({
+      innerHTML: innerHTML,
       location: location,
       markOptions: (0, _uiFormLayout_managerUtils.convertToLabelMarkOptions)(this._getMarkOptions())
     });
@@ -856,6 +858,7 @@ var LayoutManager = _ui.default.inherit({
 
       case 'alignItemLabels':
       case 'labelLocation':
+      case 'labelMode':
       case 'requiredMessage':
         this._invalidate();
 

@@ -65,7 +65,7 @@ export var viewFunction = _ref => {
     })
   })));
 };
-export var TimePaneLayoutProps = {
+export var TimePanelLayoutProps = {
   get timePanelData() {
     return {
       groupedData: [],
@@ -123,4 +123,4 @@ export class TimePanelTableLayout extends InfernoWrapperComponent {
   }
 
 }
-TimePanelTableLayout.defaultProps = TimePaneLayoutProps;
+TimePanelTableLayout.defaultProps = TimePanelLayoutProps;

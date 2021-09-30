@@ -204,6 +204,7 @@ var Diagram = /*#__PURE__*/function (_Widget) {
       var $scrollViewWrapper = (0, _renderer.default)('<div>').addClass(DIAGRAM_SCROLL_VIEW_CLASS).appendTo(this._$content);
 
       this._createComponent($scrollViewWrapper, _uiDiagram9.default, {
+        useNativeScrolling: this.option('useNativeScrolling'),
         onCreateDiagram: function onCreateDiagram(e) {
           _this._diagramInstance.createDocument(e.$parent[0], e.scrollView);
         }
@@ -1949,6 +1950,20 @@ var Diagram = /*#__PURE__*/function (_Widget) {
     });
   };
 
+  _proto.fitToContent = function fitToContent() {
+    var _getDiagram34 = (0, _diagram.getDiagram)(),
+        DiagramCommand = _getDiagram34.DiagramCommand;
+
+    this._executeDiagramCommand(DiagramCommand.FitToScreen);
+  };
+
+  _proto.fitToWidth = function fitToWidth() {
+    var _getDiagram35 = (0, _diagram.getDiagram)(),
+        DiagramCommand = _getDiagram35.DiagramCommand;
+
+    this._executeDiagramCommand(DiagramCommand.FitToWidth);
+  };
+
   _proto.focus = function focus() {
     this._captureFocus();
   };
@@ -1964,8 +1979,8 @@ var Diagram = /*#__PURE__*/function (_Widget) {
   };
 
   _proto._getDiagramExportToCommand = function _getDiagramExportToCommand(format) {
-    var _getDiagram34 = (0, _diagram.getDiagram)(),
-        DiagramCommand = _getDiagram34.DiagramCommand;
+    var _getDiagram36 = (0, _diagram.getDiagram)(),
+        DiagramCommand = _getDiagram36.DiagramCommand;
 
     switch (format) {
       case 'png':
@@ -2306,8 +2321,8 @@ var Diagram = /*#__PURE__*/function (_Widget) {
   };
 
   _proto._getModelOperation = function _getModelOperation(operation) {
-    var _getDiagram35 = (0, _diagram.getDiagram)(),
-        DiagramModelOperation = _getDiagram35.DiagramModelOperation;
+    var _getDiagram37 = (0, _diagram.getDiagram)(),
+        DiagramModelOperation = _getDiagram37.DiagramModelOperation;
 
     switch (operation) {
       case DiagramModelOperation.AddShape:
@@ -2349,9 +2364,9 @@ var Diagram = /*#__PURE__*/function (_Widget) {
   };
 
   _proto._getRequestEditOperationEventArgs = function _getRequestEditOperationEventArgs(operation, args) {
-    var _getDiagram36 = (0, _diagram.getDiagram)(),
-        DiagramModelOperation = _getDiagram36.DiagramModelOperation,
-        ConnectorPosition = _getDiagram36.ConnectorPosition;
+    var _getDiagram38 = (0, _diagram.getDiagram)(),
+        DiagramModelOperation = _getDiagram38.DiagramModelOperation,
+        ConnectorPosition = _getDiagram38.ConnectorPosition;
 
     var eventArgs = {
       operation: this._getModelOperation(operation),
@@ -2479,8 +2494,8 @@ var Diagram = /*#__PURE__*/function (_Widget) {
   };
 
   _proto._nativeItemToDiagramItem = function _nativeItemToDiagramItem(nativeItem) {
-    var _getDiagram37 = (0, _diagram.getDiagram)(),
-        NativeShape = _getDiagram37.NativeShape;
+    var _getDiagram39 = (0, _diagram.getDiagram)(),
+        NativeShape = _getDiagram39.NativeShape;
 
     var createMethod = nativeItem instanceof NativeShape ? this._nativeShapeToDiagramShape.bind(this) : this._nativeConnectorToDiagramConnector.bind(this);
     return (0, _extend.extend)({
@@ -2646,6 +2661,11 @@ var Diagram = /*#__PURE__*/function (_Widget) {
 
       case 'simpleView':
         this._updateSimpleViewState();
+
+        break;
+
+      case 'useNativeScrolling':
+        this._invalidate();
 
         break;
 

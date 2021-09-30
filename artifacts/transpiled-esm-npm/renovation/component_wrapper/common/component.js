@@ -506,9 +506,11 @@ var ComponentWrapper = /*#__PURE__*/function (_DOMComponent) {
       if (!this._elementAttr) {
         var attributes = this.$element()[0].attributes;
         this._elementAttr = _extends({}, Object.keys(attributes).reduce(function (result, key) {
+          var _attributes$key;
+
           var updatedAttributes = result;
 
-          if (attributes[key].specified) {
+          if ((_attributes$key = attributes[key]) !== null && _attributes$key !== void 0 && _attributes$key.specified) {
             updatedAttributes[attributes[key].name] = attributes[key].value;
           }
 

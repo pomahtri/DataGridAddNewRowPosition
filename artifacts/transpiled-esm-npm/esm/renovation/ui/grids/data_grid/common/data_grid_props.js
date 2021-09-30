@@ -186,8 +186,9 @@ export var DataGridProps = Object.create(Object.prototype, _extends(Object.getOw
       columnPageSize: 5,
       columnRenderingThreshold: 300,
       useNative: "auto",
-      newMode: true,
-      minGap: 1
+      prerenderedRowChunkSize: 1,
+      legacyMode: false,
+      prerenderedRowCount: 1
     };
   },
 

@@ -1,6 +1,6 @@
 "use strict";
 
-exports.TimePanelTableLayout = exports.TimePaneLayoutProps = exports.viewFunction = void 0;
+exports.TimePanelTableLayout = exports.TimePanelLayoutProps = exports.viewFunction = void 0;
 
 var _inferno = require("inferno");
 
@@ -84,7 +84,7 @@ var viewFunction = function viewFunction(_ref) {
 };
 
 exports.viewFunction = viewFunction;
-var TimePaneLayoutProps = Object.defineProperties({}, {
+var TimePanelLayoutProps = Object.defineProperties({}, {
   timePanelData: {
     get: function get() {
       return {
@@ -99,7 +99,7 @@ var TimePaneLayoutProps = Object.defineProperties({}, {
     enumerable: true
   }
 });
-exports.TimePaneLayoutProps = TimePaneLayoutProps;
+exports.TimePanelLayoutProps = TimePanelLayoutProps;
 
 var getTemplate = function getTemplate(TemplateProp) {
   return TemplateProp && (TemplateProp.defaultProps ? function (props) {
@@ -168,4 +168,4 @@ var TimePanelTableLayout = /*#__PURE__*/function (_InfernoWrapperCompon) {
 }(_inferno2.InfernoWrapperComponent);
 
 exports.TimePanelTableLayout = TimePanelTableLayout;
-TimePanelTableLayout.defaultProps = TimePaneLayoutProps;
+TimePanelTableLayout.defaultProps = TimePanelLayoutProps;

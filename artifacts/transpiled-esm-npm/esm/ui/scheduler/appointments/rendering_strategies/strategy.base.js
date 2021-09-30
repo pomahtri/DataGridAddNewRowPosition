@@ -1,5 +1,5 @@
 import _extends from "@babel/runtime/helpers/esm/extends";
-import BasePositioningStrategy from './appointmentsPositioning_strategy_base';
+import AppointmentPositioningStrategy from './appointmentsPositioning_strategy_base';
 import AdaptivePositioningStrategy from './appointmentsPositioning_strategy_adaptive';
 import { extend } from '../../../../core/utils/extend';
 import dateUtils from '../../../../core/utils/date';
@@ -19,11 +19,6 @@ class BaseRenderingStrategy {
 
     this._initPositioningStrategy();
   }
-
-  get instance() {
-    return this.options.instance;
-  } // TODO get rid of this
-
 
   get key() {
     return this.options.key;
@@ -66,11 +61,11 @@ class BaseRenderingStrategy {
   }
 
   get isGroupedByDate() {
-    return this.options.getIsGroupedByDate();
+    return this.options.isGroupedByDate;
   }
 
   get visibleDayDuration() {
-    return this.options.getVisibleDayDuration();
+    return this.options.visibleDayDuration;
   }
 
   get viewStartDayHour() {
@@ -83,6 +78,10 @@ class BaseRenderingStrategy {
 
   get cellDuration() {
     return this.options.cellDuration;
+  }
+
+  get cellDurationInMinutes() {
+    return this.options.cellDurationInMinutes;
   }
 
   get leftVirtualCellCount() {
@@ -109,6 +108,42 @@ class BaseRenderingStrategy {
     return this.options.groupOrientation;
   }
 
+  get rowCount() {
+    return this.options.rowCount;
+  }
+
+  get groupCount() {
+    return this.options.groupCount;
+  }
+
+  get currentDate() {
+    return this.options.currentDate;
+  }
+
+  get appointmentCountPerCell() {
+    return this.options.appointmentCountPerCell;
+  }
+
+  get appointmentOffset() {
+    return this.options.appointmentOffset;
+  }
+
+  get allowResizing() {
+    return this.options.allowResizing;
+  }
+
+  get allowAllDayResizing() {
+    return this.options.allowAllDayResizing;
+  }
+
+  get viewDataProvider() {
+    return this.options.viewDataProvider;
+  }
+
+  get appointmentDataProvider() {
+    return this.options.appointmentDataProvider;
+  }
+
   get isVirtualScrolling() {
     return this.options.isVirtualScrolling;
   }
@@ -119,7 +154,7 @@ class BaseRenderingStrategy {
   }
 
   _initPositioningStrategy() {
-    this._positioningStrategy = this.isAdaptive ? new AdaptivePositioningStrategy(this) : new BasePositioningStrategy(this);
+    this._positioningStrategy = this.isAdaptive ? new AdaptivePositioningStrategy(this) : new AppointmentPositioningStrategy(this);
   }
 
   getPositioningStrategy() {
@@ -277,7 +312,7 @@ class BaseRenderingStrategy {
   }
 
   isAppointmentTakesAllDay(rawAppointment) {
-    return this.options.appointmentDataProvider.appointmentTakesAllDay(rawAppointment, this.viewStartDayHour, this.viewEndDayHour);
+    return this.appointmentDataProvider.appointmentTakesAllDay(rawAppointment, this.viewStartDayHour, this.viewEndDayHour);
   }
 
   _getAppointmentParts() {

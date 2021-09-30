@@ -109,3 +109,15 @@ export var getTotalCellCountByCompleteData = completeData => completeData[comple
 export var getTotalRowCountByCompleteData = completeData => completeData.length;
 export var getDisplayedCellCount = (displayedCellCount, completeData) => displayedCellCount !== null && displayedCellCount !== void 0 ? displayedCellCount : getTotalCellCountByCompleteData(completeData);
 export var getDisplayedRowCount = (displayedRowCount, completeData) => displayedRowCount !== null && displayedRowCount !== void 0 ? displayedRowCount : getTotalRowCountByCompleteData(completeData);
+export var getCellDuration = (viewType, startDayHour, endDayHour, hoursInterval) => {
+  switch (viewType) {
+    case "month":
+      return calculateDayDuration(startDayHour, endDayHour) * 3600000;
+
+    case "timelineMonth":
+      return dateUtils.dateToMilliseconds("day");
+
+    default:
+      return 3600000 * hoursInterval;
+  }
+};

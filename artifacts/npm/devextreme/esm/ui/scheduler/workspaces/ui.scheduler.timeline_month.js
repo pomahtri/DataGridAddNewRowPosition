@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scheduler/workspaces/ui.scheduler.timeline_month.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -15,7 +15,6 @@ import { getViewStartByOptions } from '../../../renovation/ui/scheduler/view_mod
 import { formatWeekdayAndDay } from '../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import { VIEWS } from '../constants';
 var TIMELINE_CLASS = 'dx-scheduler-timeline-month';
-var toMs = dateUtils.dateToMilliseconds;
 
 class SchedulerTimelineMonth extends SchedulerTimeline {
   get type() {
@@ -46,10 +45,6 @@ class SchedulerTimelineMonth extends SchedulerTimeline {
 
   _calculateDurationInCells(timeDiff) {
     return timeDiff / this.getCellDuration();
-  }
-
-  getCellDuration() {
-    return toMs('day');
   }
 
   isIndicatorVisible() {

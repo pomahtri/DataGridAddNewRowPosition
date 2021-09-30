@@ -22,6 +22,7 @@ import { FunctionTemplate } from '../../core/templates/function_template';
 import Popup from '../popup';
 import { hasWindow } from '../../core/utils/window';
 import { getElementWidth, getSizeValue } from './utils';
+import { locate, move } from '../../animation/translator';
 var DROP_DOWN_EDITOR_CLASS = 'dx-dropdowneditor';
 var DROP_DOWN_EDITOR_INPUT_WRAPPER = 'dx-dropdowneditor-input-wrapper';
 var DROP_DOWN_EDITOR_BUTTON_ICON = 'dx-dropdowneditor-icon';
@@ -610,6 +611,16 @@ var DropDownEditor = TextBox.inherit({
 
     this._openAction();
 
+    var $popupOverlayContent = this._popup.$overlayContent();
+
+    var position = locate($popupOverlayContent);
+
+    if (this._$label && $popupOverlayContent.hasClass(DROP_DOWN_EDITOR_OVERLAY_FLIPPED)) {
+      move($popupOverlayContent, {
+        top: position.top - parseInt(this._$label.css('font-size'))
+      });
+    }
+
     (_this$_validationMess = this._validationMessage) === null || _this$_validationMess === void 0 ? void 0 : _this$_validationMess.option('positionRequest', this._getValidationMessagePositionRequest());
   },
   _popupHiddenHandler: function _popupHiddenHandler() {
@@ -764,15 +775,6 @@ var DropDownEditor = TextBox.inherit({
 
     this.callBase();
   },
-  _setDeprecatedOptions: function _setDeprecatedOptions() {
-    this.callBase();
-    extend(this._deprecatedOptions, {
-      'showPopupTitle': {
-        since: '20.1',
-        alias: 'dropDownOptions.showTitle'
-      }
-    });
-  },
   _optionChanged: function _optionChanged(args) {
     var _this$_popup;
 
@@ -842,11 +844,6 @@ var DropDownEditor = TextBox.inherit({
       case 'cancelButtonText':
       case 'buttonsLocation':
         this._setPopupOption('toolbarItems', this._getPopupToolbarItems());
-
-        break;
-
-      case 'showPopupTitle':
-        this._setPopupOption('showTitle', args.value);
 
         break;
 

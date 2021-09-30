@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/diagram/ui.diagram.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -151,6 +151,7 @@ class Diagram extends Widget {
       var $scrollViewWrapper = $('<div>').addClass(DIAGRAM_SCROLL_VIEW_CLASS).appendTo(this._$content);
 
       this._createComponent($scrollViewWrapper, DiagramScrollView, {
+        useNativeScrolling: this.option('useNativeScrolling'),
         onCreateDiagram: e => {
           this._diagramInstance.createDocument(e.$parent[0], e.scrollView);
         }
@@ -1884,6 +1885,22 @@ class Diagram extends Widget {
     });
   }
 
+  fitToContent() {
+    var {
+      DiagramCommand
+    } = getDiagram();
+
+    this._executeDiagramCommand(DiagramCommand.FitToScreen);
+  }
+
+  fitToWidth() {
+    var {
+      DiagramCommand
+    } = getDiagram();
+
+    this._executeDiagramCommand(DiagramCommand.FitToWidth);
+  }
+
   focus() {
     this._captureFocus();
   }
@@ -2571,6 +2588,11 @@ class Diagram extends Widget {
 
       case 'simpleView':
         this._updateSimpleViewState();
+
+        break;
+
+      case 'useNativeScrolling':
+        this._invalidate();
 
         break;
 

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/workspaces/ui.scheduler.work_space.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -92,7 +92,7 @@ var _base = require("../../../renovation/ui/scheduler/view_model/to_test/views/u
 
 var _utils = require("../resources/utils");
 
-var _semaphore = _interopRequireDefault(require("../semaphore"));
+var _semaphore = require("../../../renovation/ui/scheduler/semaphore");
 
 var _positionHelper = require("./helpers/positionHelper");
 
@@ -540,6 +540,9 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
     }
 
     this.updateHeaderEmptyCellWidth();
+
+    this._updateScrollable();
+
     this.cache.clear();
   };
 
@@ -1330,7 +1333,7 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
   };
 
   _proto.getRoundedCellWidth = function getRoundedCellWidth(groupIndex, startIndex, cellCount) {
-    if (groupIndex < 0) {
+    if (groupIndex < 0 || !(0, _window.hasWindow)()) {
       return 0;
     }
 
@@ -1346,7 +1349,8 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
 
     for (var i = startIndex; i < totalCellCount + cellCount; i++) {
       var element = (0, _renderer.default)($cells).eq(i).get(0);
-      width = element ? width + (0, _position.getBoundingRect)(element).width : width;
+      var elementWidth = element ? (0, _position.getBoundingRect)(element).width : 0;
+      width = width + elementWidth;
     }
 
     return width / (totalCellCount + cellCount - startIndex);
@@ -1402,8 +1406,7 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
   };
 
   _proto.getCellDuration = function getCellDuration() {
-    // TODO move to the ModelProvider
-    return 3600000 * this.option('hoursInterval');
+    return (0, _base.getCellDuration)(this.type, this.option('startDayHour'), this.option('endDayHour'), this.option('hoursInterval'));
   };
 
   _proto.getIntervalDuration = function getIntervalDuration(allDay) {
@@ -1736,14 +1739,14 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
 
     var dateTableCells = this._getAllCells(false);
 
-    if (!dateTableCells.length) {
+    if (!dateTableCells.length || !(0, _window.hasWindow)()) {
       return [[{}]];
     }
 
     var dateTable = this._getDateTable(); // We should use getBoundingClientRect in renovation
 
 
-    var dateTableRect = dateTable.get(0) ? (0, _position.getBoundingRect)(dateTable.get(0)) : 0;
+    var dateTableRect = (0, _position.getBoundingRect)(dateTable.get(0));
     var columnsCount = this.viewDataProvider.getColumnsCount();
     var result = [];
     dateTableCells.each(function (index, cell) {
@@ -1763,7 +1766,7 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
 
     var result = [];
 
-    if (this.isAllDayPanelVisible && !this._isVerticalGroupedWorkSpace()) {
+    if (this.isAllDayPanelVisible && !this._isVerticalGroupedWorkSpace() && (0, _window.hasWindow)()) {
       var allDayCells = this._getAllCells(true);
 
       if (!allDayCells.length) {
@@ -2226,9 +2229,9 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
   };
 
   _proto._init = function _init() {
-    this._headerSemaphore = new _semaphore.default();
-    this._sideBarSemaphore = new _semaphore.default();
-    this._dataTableSemaphore = new _semaphore.default();
+    this._headerSemaphore = new _semaphore.Semaphore();
+    this._sideBarSemaphore = new _semaphore.Semaphore();
+    this._dataTableSemaphore = new _semaphore.Semaphore();
     this._viewDataProvider = null;
     this._cellsSelectionState = null;
     this._activeStateUnit = CELL_SELECTOR;
@@ -2556,7 +2559,7 @@ var SchedulerWorkSpace = /*#__PURE__*/function (_WidgetObserver) {
   _proto._detachGroupCountClass = function _detachGroupCountClass() {
     var _this20 = this;
 
-    [].concat(_toConsumableArray(_classes.VERTICAL_GROUP_COUNT_CLASSES), _toConsumableArray(_classes.HORIZONTAL_GROUP_COUNT_CLASSES)).forEach(function (className) {
+    _toConsumableArray(_classes.VERTICAL_GROUP_COUNT_CLASSES).forEach(function (className) {
       _this20.$element().removeClass(className);
     });
   };

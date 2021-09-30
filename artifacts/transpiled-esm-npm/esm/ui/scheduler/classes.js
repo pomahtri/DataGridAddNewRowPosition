@@ -38,4 +38,3 @@ export var GROUP_HEADER_CONTENT_CLASS = 'dx-scheduler-group-header-content';
 export var LAST_GROUP_CELL_CLASS = 'dx-scheduler-last-group-cell';
 export var FIRST_GROUP_CELL_CLASS = 'dx-scheduler-first-group-cell';
 export var VERTICAL_GROUP_COUNT_CLASSES = ['dx-scheduler-group-column-count-one', 'dx-scheduler-group-column-count-two', 'dx-scheduler-group-column-count-three'];
-export var HORIZONTAL_GROUP_COUNT_CLASSES = ['dx-scheduler-group-row-count-one', 'dx-scheduler-group-row-count-two', 'dx-scheduler-group-row-count-three'];

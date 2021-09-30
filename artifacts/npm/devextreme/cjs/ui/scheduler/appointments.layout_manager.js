@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/appointments.layout_manager.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -19,6 +19,8 @@ var _viewModelGenerator = require("./appointments/viewModelGenerator");
 var _utils = require("./resources/utils");
 
 var _positionHelper = require("./workspaces/helpers/positionHelper");
+
+var _base = require("../../renovation/ui/scheduler/view_model/to_test/views/utils/base");
 
 function _extends() { _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
 
@@ -56,13 +58,18 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
     var groupCount = (0, _utils.getGroupCount)(this.instance.option('loadedResources'));
     var DOMMetaData = workspace.getDOMElementsMetaData();
     var allDayHeight = (0, _positionHelper.getAllDayHeight)(workspace.option('showAllDayPanel'), workspace._isVerticalGroupedWorkSpace(), DOMMetaData);
-    var positionHelper = workspace.positionHelper;
+
+    var rowCount = workspace._getRowCount();
+
+    var positionHelper = workspace.positionHelper,
+        viewDataProvider = workspace.viewDataProvider;
+    var visibleDayDuration = viewDataProvider.getVisibleDayDuration(workspace.option('startDayHour'), workspace.option('endDayHour'), workspace.option('hoursInterval'));
+    var cellDuration = (0, _base.getCellDuration)(workspace.type, workspace.option('startDayHour'), workspace.option('endDayHour'), workspace.option('hoursInterval'));
     return {
       resources: this.instance.option('resources'),
       loadedResources: this.instance.option('loadedResources'),
       getAppointmentColor: this.instance.createGetAppointmentColor(),
       dataAccessors: this.instance._dataAccessors,
-      instance: this.instance,
       key: key,
       isRenovatedAppointments: this.modelProvider.isRenovatedAppointments,
       appointmentRenderingStrategyName: this.appointmentRenderingStrategyName,
@@ -71,7 +78,6 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
       startDayHour: this.modelProvider.startDayHour,
       endDayHour: this.modelProvider.endDayHour,
       maxAppointmentsPerCell: this.modelProvider.maxAppointmentsPerCell,
-      agendaDuration: workspace.option('agendaDuration'),
       currentDate: this.modelProvider.currentDate,
       isVirtualScrolling: this.instance.isVirtualScrolling(),
       leftVirtualCellCount: cellCountInsideLeftVirtualCell,
@@ -82,18 +88,18 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
       isGroupedAllDayPanel: workspace.isGroupedAllDayPanel(),
       modelGroups: this.modelProvider.getCurrentViewOption('groups'),
       groupCount: groupCount,
+      rowCount: rowCount,
+      appointmentCountPerCell: this.instance.option('_appointmentCountPerCell'),
+      appointmentOffset: this.instance.option('_appointmentOffset'),
+      allowResizing: this.instance._allowResizing(),
+      allowAllDayResizing: this.instance._allowAllDayResizing(),
       startViewDate: workspace.getStartViewDate(),
       groupOrientation: workspace._getRealGroupOrientation(),
-      getIsGroupedByDate: function getIsGroupedByDate() {
-        return workspace.isGroupedByDate();
-      },
       cellWidth: (0, _positionHelper.getCellWidth)(DOMMetaData),
       cellHeight: (0, _positionHelper.getCellHeight)(DOMMetaData),
       allDayHeight: allDayHeight,
       resizableStep: positionHelper.getResizableStep(),
-      getVisibleDayDuration: function getVisibleDayDuration() {
-        return workspace.getVisibleDayDuration();
-      },
+      visibleDayDuration: visibleDayDuration,
       // appointment settings
       timeZoneCalculator: (0, _instanceFactory.getTimeZoneCalculator)(key),
       appointmentDataProvider: (0, _instanceFactory.getAppointmentDataProvider)(key),
@@ -105,23 +111,25 @@ var AppointmentLayoutManager = /*#__PURE__*/function () {
       endViewDate: workspace.getEndViewDate(),
       positionHelper: positionHelper,
       isGroupedByDate: workspace.isGroupedByDate(),
-      cellDuration: workspace.getCellDuration(),
+      cellDuration: cellDuration,
+      cellDurationInMinutes: workspace.option('cellDuration'),
       viewDataProvider: workspace.viewDataProvider,
       supportAllDayRow: workspace.supportAllDayRow(),
       dateRange: workspace.getDateRange(),
       intervalDuration: workspace.getIntervalDuration(),
-      isVerticalOrientation: workspace.isVerticalOrientation(),
       allDayIntervalDuration: workspace.getIntervalDuration(true),
-      DOMMetaData: DOMMetaData
+      isVerticalOrientation: workspace.isVerticalOrientation(),
+      DOMMetaData: DOMMetaData,
+      // agenda only
+      instance: this.instance,
+      agendaDuration: workspace.option('agendaDuration')
     };
   };
 
   _proto.createAppointmentsMap = function createAppointmentsMap(items) {
     var renderingStrategyOptions = this._getRenderingStrategyOptions();
 
-    var _this$appointmentView = this.appointmentViewModel.generate(_extends({
-      filteredItems: items
-    }, renderingStrategyOptions)),
+    var _this$appointmentView = this.appointmentViewModel.generate(items, renderingStrategyOptions),
         viewModel = _this$appointmentView.viewModel,
         positionMap = _this$appointmentView.positionMap;
 

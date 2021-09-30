@@ -1,6 +1,5 @@
 import config from '../config';
 import { isWindow } from '../utils/type';
-import domAdapter from '../dom_adapter';
 
 var getDefaultAlignment = isRtlEnabled => {
   var rtlEnabled = isRtlEnabled !== null && isRtlEnabled !== void 0 ? isRtlEnabled : config().rtlEnabled;
@@ -15,11 +14,7 @@ var getBoundingRect = element => {
     };
   }
 
-  if (domAdapter.getDocumentElement()) {
-    return element.getBoundingClientRect();
-  }
-
-  return 0;
+  return element.getBoundingClientRect();
 };
 
 export { getBoundingRect, getDefaultAlignment };

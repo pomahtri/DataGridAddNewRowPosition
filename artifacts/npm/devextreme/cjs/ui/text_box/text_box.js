@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/text_box/text_box.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,6 +9,8 @@
 "use strict";
 
 exports.default = void 0;
+
+var _size = require("../../core/utils/size");
 
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 
@@ -99,6 +101,18 @@ var TextBox = _ui.default.inherit({
     var $searchIcon = (0, _renderer.default)('<div>').addClass(ICON_CLASS).addClass(SEARCH_ICON_CLASS);
     $searchIcon.prependTo(this._input().parent());
     this._$searchIcon = $searchIcon;
+  },
+  _renderLabel: function _renderLabel() {
+    this.callBase();
+
+    if (this._$searchIcon && this._$label) {
+      var labelBeforeElement = this._$label.find('.dx-label-before');
+
+      var labelBeforeWidth = (0, _size.getWidth)(labelBeforeElement) + (0, _size.getOuterWidth)(this._$searchIcon);
+      labelBeforeElement.css('width', labelBeforeWidth);
+
+      this._$label.find('.dx-label').css('max-width', (0, _size.getWidth)(this._input().parent()) - labelBeforeWidth);
+    }
   },
   _optionChanged: function _optionChanged(args) {
     switch (args.name) {

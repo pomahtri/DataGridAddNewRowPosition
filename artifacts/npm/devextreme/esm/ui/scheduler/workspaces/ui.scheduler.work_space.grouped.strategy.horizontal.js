@@ -1,13 +1,13 @@
 /**
 * DevExtreme (esm/ui/scheduler/workspaces/ui.scheduler.work_space.grouped.strategy.horizontal.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
 */
 import { getBoundingRect } from '../../../core/utils/position';
-import { FIRST_GROUP_CELL_CLASS, HORIZONTAL_GROUP_COUNT_CLASSES, LAST_GROUP_CELL_CLASS } from '../classes';
+import { FIRST_GROUP_CELL_CLASS, LAST_GROUP_CELL_CLASS } from '../classes';
 
 class HorizontalGroupedStrategy {
   constructor(workSpace) {
@@ -72,19 +72,7 @@ class HorizontalGroupedStrategy {
   }
 
   getGroupCountClass(groups) {
-    switch (groups === null || groups === void 0 ? void 0 : groups.length) {
-      case 1:
-        return HORIZONTAL_GROUP_COUNT_CLASSES[0];
-
-      case 2:
-        return HORIZONTAL_GROUP_COUNT_CLASSES[1];
-
-      case 3:
-        return HORIZONTAL_GROUP_COUNT_CLASSES[2];
-
-      default:
-        return undefined;
-    }
+    return undefined;
   }
 
   getLeftOffset() {

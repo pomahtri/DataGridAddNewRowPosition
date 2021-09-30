@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/appointments/rendering_strategies/strategy_vertical.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -50,7 +50,7 @@ var VerticalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) {
       deltaTime = this._getDeltaWidth(args, initialSize) * toMs('day');
     } else {
       var deltaHeight = args.height - initialSize.height;
-      deltaTime = toMs('minute') * Math.round(deltaHeight / this.cellHeight * this.instance.getAppointmentDurationInMinutes());
+      deltaTime = toMs('minute') * Math.round(deltaHeight / this.cellHeight * this.cellDurationInMinutes);
     }
 
     return deltaTime;
@@ -163,8 +163,7 @@ var VerticalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) {
   };
 
   _proto._getGroupHeight = function _getGroupHeight() {
-    var workspace = this.instance.getWorkSpace();
-    return workspace.getCellHeight() * workspace._getRowCount();
+    return this.cellHeight * this.rowCount;
   };
 
   _proto._getGroupTopOffset = function _getGroupTopOffset(appointmentSettings) {
@@ -208,7 +207,7 @@ var VerticalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) {
       showAllDayPanel: this.showAllDayPanel,
       isGroupedAllDayPanel: this.isGroupedAllDayPanel
     }));
-    var cellsDiff = this.isGroupedByDate ? this.instance.fire('getGroupCount') : 1;
+    var cellsDiff = this.isGroupedByDate ? this.groupCount : 1;
     var offset = this.cellWidth * cellsDiff;
     var left = appointmentSettings.left + offset;
 
@@ -240,7 +239,7 @@ var VerticalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) {
   };
 
   _proto._getMinuteHeight = function _getMinuteHeight() {
-    return this.cellHeight / this.instance.getAppointmentDurationInMinutes();
+    return this.cellHeight / this.cellDurationInMinutes;
   };
 
   _proto._getCompactLeftCoordinate = function _getCompactLeftCoordinate(itemLeft, index) {
@@ -318,7 +317,7 @@ var VerticalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) {
       return true;
     }
 
-    return this.instance.appointmentTakesAllDay(appointmentData);
+    return this.appointmentDataProvider.appointmentTakesAllDay(appointmentData, this.startDayHour, this.endDayHour);
   };
 
   _proto._getAppointmentMaxWidth = function _getAppointmentMaxWidth() {
@@ -380,7 +379,7 @@ var VerticalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) {
   };
 
   _proto._calculateGeometryConfig = function _calculateGeometryConfig(coordinates) {
-    if (!this.instance._allowResizing() || !this.instance._allowAllDayResizing()) {
+    if (!this.allowResizing || !this.allowAllDayResizing) {
       coordinates.skipResizing = true;
     }
 
@@ -398,7 +397,7 @@ var VerticalRenderingStrategy = /*#__PURE__*/function (_BaseAppointmentsStra) {
   };
 
   _proto._getDefaultRatio = function _getDefaultRatio(coordinates, appointmentCountPerCell) {
-    return coordinates.count > this.instance.option('_appointmentCountPerCell') ? 0.65 : 1;
+    return coordinates.count > this.appointmentCountPerCell ? 0.65 : 1;
   };
 
   _proto._getOffsets = function _getOffsets() {

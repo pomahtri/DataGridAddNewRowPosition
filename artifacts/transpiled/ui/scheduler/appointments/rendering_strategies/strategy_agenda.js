@@ -273,14 +273,14 @@ var AgendaRenderingStrategy = /*#__PURE__*/function (_BaseRenderingStrateg) {
   };
 
   _createClass(AgendaRenderingStrategy, [{
+    key: "instance",
+    get: function get() {
+      return this.options.instance;
+    }
+  }, {
     key: "agendaDuration",
     get: function get() {
       return this.options.agendaDuration;
-    }
-  }, {
-    key: "currentDate",
-    get: function get() {
-      return this.options.currentDate;
     }
   }]);
 

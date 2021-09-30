@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/exporter/jspdf/v3/rows_generator.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -22,6 +22,7 @@ import { isDefined } from '../../../core/utils/type'; // Returns IPdfRowInfo[]
 //              textColor: '#0000ff', // TODO: specify color format for docs
 //              backgroundColor: '#0000ff', // TODO: specify color format for docs
 //              verticalAlign: 'top' | 'bottom' | 'middle | undefined. Default value is middle
+//              horizontalAlign: 'left' | 'right' | 'center' | undefined. Default value is left
 //              wordWrapEnabled, // true | false. Default value is inherited from grid props,
 //              drawRightBorder,
 //              drawLeftBorder
@@ -85,6 +86,7 @@ function generateRowCells(_ref) {
       pdfCell: {
         text: cellData.value,
         verticalAlign: 'middle',
+        horizontalAlign: 'left',
         wordWrapEnabled,
         backgroundColor,
         padding: 0,

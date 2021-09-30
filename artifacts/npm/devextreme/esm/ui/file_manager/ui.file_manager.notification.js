@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/file_manager/ui.file_manager.notification.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -182,9 +182,7 @@ export default class FileManagerNotificationControl extends Widget {
   }
 
   _dimensionChanged(dimension) {
-    var notificationManager = this._getNotificationManager();
-
-    if (!(dimension && dimension === 'height') && notificationManager.handleDimensionChanged()) {
+    if (!(dimension && dimension === 'height')) {
       this._checkAdaptiveState();
     }
   }
@@ -193,10 +191,14 @@ export default class FileManagerNotificationControl extends Widget {
     var oldState = this._isInAdaptiveState;
     this._isInAdaptiveState = this._isSmallScreen();
 
-    if (this._progressDrawer && oldState !== this._isInAdaptiveState) {
-      var options = this._getProgressDrawerAdaptiveOptions();
+    if (oldState !== this._isInAdaptiveState && this._progressDrawer) {
+      var notificationManager = this._getNotificationManager();
 
-      this._progressDrawer.option(options);
+      if (notificationManager.handleDimensionChanged()) {
+        var options = this._getProgressDrawerAdaptiveOptions();
+
+        this._progressDrawer.option(options);
+      }
     }
   }
 

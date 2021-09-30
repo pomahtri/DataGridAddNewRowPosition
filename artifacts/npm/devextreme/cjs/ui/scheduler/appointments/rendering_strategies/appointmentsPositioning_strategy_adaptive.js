@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/appointments/rendering_strategies/appointmentsPositioning_strategy_adaptive.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -23,11 +23,11 @@ var COLLECTOR_ADAPTIVE_BOTTOM_OFFSET = 40;
 var ADAPTIVE_APPOINTMENT_DEFAULT_OFFSET = 35;
 var ADAPTIVE_APPOINTMENT_DEFAULT_WIDTH = 30;
 
-var AdaptivePositioningStrategy = /*#__PURE__*/function (_BasePositioningStrat) {
-  _inheritsLoose(AdaptivePositioningStrategy, _BasePositioningStrat);
+var AdaptivePositioningStrategy = /*#__PURE__*/function (_AppointmentPositioni) {
+  _inheritsLoose(AdaptivePositioningStrategy, _AppointmentPositioni);
 
   function AdaptivePositioningStrategy() {
-    return _BasePositioningStrat.apply(this, arguments) || this;
+    return _AppointmentPositioni.apply(this, arguments) || this;
   }
 
   var _proto = AdaptivePositioningStrategy.prototype;
@@ -41,18 +41,19 @@ var AdaptivePositioningStrategy = /*#__PURE__*/function (_BasePositioningStrat) 
   };
 
   _proto.getCollectorTopOffset = function getCollectorTopOffset(allDay) {
-    var renderingStrategy = this.getRenderingStrategy();
+    var renderingStrategy = this._renderingStrategy;
 
     if (renderingStrategy.allDaySupported() && allDay) {
       return (renderingStrategy.allDayHeight - renderingStrategy.getDropDownButtonAdaptiveSize()) / 2;
     } else {
-      return this.getRenderingStrategy().cellHeight - COLLECTOR_ADAPTIVE_BOTTOM_OFFSET;
+      return this._renderingStrategy.cellHeight - COLLECTOR_ADAPTIVE_BOTTOM_OFFSET;
     }
   };
 
   _proto.getCollectorLeftOffset = function getCollectorLeftOffset() {
-    var collectorWidth = this.getRenderingStrategy().getDropDownAppointmentWidth();
-    return (this.getRenderingStrategy().cellWidth - collectorWidth) / 2;
+    var collectorWidth = this._renderingStrategy.getDropDownAppointmentWidth();
+
+    return (this._renderingStrategy.cellWidth - collectorWidth) / 2;
   };
 
   _proto.getAppointmentDefaultOffset = function getAppointmentDefaultOffset() {
@@ -60,7 +61,7 @@ var AdaptivePositioningStrategy = /*#__PURE__*/function (_BasePositioningStrat) 
   };
 
   _proto.getDynamicAppointmentCountPerCell = function getDynamicAppointmentCountPerCell() {
-    var renderingStrategy = this.getRenderingStrategy();
+    var renderingStrategy = this._renderingStrategy;
 
     if (renderingStrategy.allDaySupported()) {
       return {
@@ -81,17 +82,17 @@ var AdaptivePositioningStrategy = /*#__PURE__*/function (_BasePositioningStrat) 
   };
 
   _proto._getAppointmentDefaultWidth = function _getAppointmentDefaultWidth() {
-    var renderingStrategy = this.getRenderingStrategy();
+    var renderingStrategy = this._renderingStrategy;
 
     if (renderingStrategy.allDaySupported()) {
       return ADAPTIVE_APPOINTMENT_DEFAULT_WIDTH;
     }
 
-    return _BasePositioningStrat.prototype._getAppointmentDefaultWidth.call(this);
+    return _AppointmentPositioni.prototype._getAppointmentDefaultWidth.call(this);
   };
 
   _proto._calculateDynamicAppointmentCountPerCell = function _calculateDynamicAppointmentCountPerCell() {
-    return Math.floor(this.getRenderingStrategy()._getAppointmentMaxWidth() / this.getRenderingStrategy()._getAppointmentDefaultWidth());
+    return Math.floor(this._renderingStrategy._getAppointmentMaxWidth() / this._renderingStrategy._getAppointmentDefaultWidth());
   };
 
   return AdaptivePositioningStrategy;

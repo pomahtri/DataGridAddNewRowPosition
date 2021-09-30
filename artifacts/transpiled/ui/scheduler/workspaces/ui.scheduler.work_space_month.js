@@ -14,6 +14,8 @@ var _position = require("../../../core/utils/position");
 
 var _utils = require("../utils");
 
+var _window = require("../../../core/utils/window");
+
 var _layout = _interopRequireDefault(require("../../../renovation/ui/scheduler/workspaces/month/date_table/layout.j"));
 
 var _month = require("../../../renovation/ui/scheduler/view_model/to_test/views/utils/month");
@@ -84,7 +86,7 @@ var SchedulerWorkSpaceMonth = /*#__PURE__*/function (_SchedulerWorkSpace) {
       var cells = _this._getCells().slice(0, DAYS_IN_WEEK);
 
       cells.each(function (index, element) {
-        averageWidth += (0, _position.getBoundingRect)(element).width;
+        averageWidth += (0, _window.hasWindow)() ? (0, _position.getBoundingRect)(element).width : 0;
       });
       return cells.length === 0 ? undefined : averageWidth / DAYS_IN_WEEK;
     });
@@ -117,10 +119,6 @@ var SchedulerWorkSpaceMonth = /*#__PURE__*/function (_SchedulerWorkSpace) {
 
   _proto.isIndicationAvailable = function isIndicationAvailable() {
     return false;
-  };
-
-  _proto.getCellDuration = function getCellDuration() {
-    return (0, _base.calculateDayDuration)(this.option('startDayHour'), this.option('endDayHour')) * 3600000;
   };
 
   _proto.getIntervalDuration = function getIntervalDuration() {

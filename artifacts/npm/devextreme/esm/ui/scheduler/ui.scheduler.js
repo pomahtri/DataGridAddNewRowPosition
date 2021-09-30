@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/scheduler/ui.scheduler.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1087,7 +1087,7 @@ class Scheduler extends Widget {
   }
 
   _initExpressions(fields) {
-    this._dataAccessors = utils.dataAccessors.create(this, fields, this._dataAccessors, config().forceIsoDateParsing, () => this.option('dateSerializationFormat'), value => this.option('dateSerializationFormat', value));
+    this._dataAccessors = utils.dataAccessors.create(fields, this._dataAccessors, config().forceIsoDateParsing, () => this.option('dateSerializationFormat'), value => this.option('dateSerializationFormat', value));
     this._dataAccessors.resources = createExpressions(this.option('resources'));
   }
 

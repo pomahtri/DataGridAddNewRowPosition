@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/form/ui.form.layout_manager.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -29,7 +29,7 @@ import '../number_box';
 import '../check_box';
 import '../date_box';
 import '../button';
-import { getLabelWidthByText } from './components/label';
+import { getLabelWidthByInnerHTML } from './components/label';
 import { renderFieldItem } from './components/field_item.js';
 import { renderButtonItem } from './components/button_item.js';
 import { renderEmptyItem } from './components/empty_item.js';
@@ -58,6 +58,7 @@ var LayoutManager = Widget.inherit({
       screenByWidth: null,
       showOptionalMark: false,
       requiredMark: '*',
+      labelMode: 'default',
       optionalMark: messageLocalization.format('dxForm-optionalMark'),
       requiredMessage: messageLocalization.getFormatter('dxForm-requiredMessage')
     });
@@ -613,7 +614,8 @@ var LayoutManager = Widget.inherit({
       managerLabelLocation: this.option('labelLocation'),
       template: item.template ? this._getTemplate(item.template) : null,
       itemId: this.option('form') && this.option('form').getItemID(name),
-      managerMarkOptions: this._getMarkOptions()
+      managerMarkOptions: this._getMarkOptions(),
+      labelMode: this.option('labelMode')
     }));
 
     if (widgetInstance && item.dataField) {
@@ -628,13 +630,13 @@ var LayoutManager = Widget.inherit({
       $itemContainer: $rootElement
     });
   },
-  _getLabelWidthByText: function _getLabelWidthByText(_ref4) {
+  _getLabelWidthByInnerHTML: function _getLabelWidthByInnerHTML(_ref4) {
     var {
-      text,
+      innerHTML,
       location
     } = _ref4;
-    return getLabelWidthByText({
-      text,
+    return getLabelWidthByInnerHTML({
+      innerHTML,
       location,
       markOptions: convertToLabelMarkOptions(this._getMarkOptions())
     });
@@ -808,6 +810,7 @@ var LayoutManager = Widget.inherit({
 
       case 'alignItemLabels':
       case 'labelLocation':
+      case 'labelMode':
       case 'requiredMessage':
         this._invalidate();
 

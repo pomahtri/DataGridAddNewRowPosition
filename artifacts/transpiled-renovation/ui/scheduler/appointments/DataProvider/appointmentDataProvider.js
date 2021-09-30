@@ -10,6 +10,8 @@ var _expressionUtils = require("../../expressionUtils");
 
 var _appointmentAdapter = require("../../appointmentAdapter");
 
+var _utils = require("./utils");
+
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
@@ -84,7 +86,7 @@ var AppointmentDataProvider = /*#__PURE__*/function () {
 
   _proto.appointmentTakesAllDay = function appointmentTakesAllDay(rawAppointment, startDayHour, endDayHour) {
     var adapter = (0, _appointmentAdapter.createAppointmentAdapter)(this.key, rawAppointment);
-    return this.getFilterStrategy().appointmentTakesAllDay(adapter, startDayHour, endDayHour);
+    return (0, _utils.getAppointmentTakesAllDay)(adapter, startDayHour, endDayHour);
   };
 
   _proto.hasAllDayAppointments = function hasAllDayAppointments(rawAppointments) {
@@ -112,7 +114,7 @@ var AppointmentDataProvider = /*#__PURE__*/function () {
 
   _proto.appointmentTakesSeveralDays = function appointmentTakesSeveralDays(rawAppointment) {
     var adapter = (0, _appointmentAdapter.createAppointmentAdapter)(this.key, rawAppointment);
-    return this.getFilterStrategy().appointmentTakesSeveralDays(adapter);
+    return (0, _utils.getAppointmentTakesSeveralDays)(adapter);
   };
 
   _proto.sortAppointmentsByStartDate = function sortAppointmentsByStartDate(appointments) {

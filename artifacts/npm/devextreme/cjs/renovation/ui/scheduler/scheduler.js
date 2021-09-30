@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/renovation/ui/scheduler/scheduler.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -26,6 +26,10 @@ var _header = require("./header/header");
 
 var _utils = require("../../../ui/scheduler/workspaces/view_model/utils");
 
+var _common = require("./common");
+
+var _utils2 = require("../../../ui/scheduler/resources/utils");
+
 var _excluded = ["accessKey", "activeStateEnabled", "adaptivityEnabled", "allDayExpr", "appointmentCollectorTemplate", "appointmentDragging", "appointmentTemplate", "appointmentTooltipTemplate", "cellDuration", "className", "crossScrollingEnabled", "currentDate", "currentDateChange", "currentView", "currentViewChange", "customizeDateNavigatorText", "dataCellTemplate", "dataSource", "dateCellTemplate", "dateSerializationFormat", "defaultCurrentDate", "defaultCurrentView", "descriptionExpr", "disabled", "editing", "endDateExpr", "endDateTimeZoneExpr", "endDayHour", "firstDayOfWeek", "focusStateEnabled", "groupByDate", "groups", "height", "hint", "hoverStateEnabled", "indicatorUpdateInterval", "max", "maxAppointmentsPerCell", "min", "noDataText", "onAppointmentAdded", "onAppointmentAdding", "onAppointmentClick", "onAppointmentContextMenu", "onAppointmentDblClick", "onAppointmentDeleted", "onAppointmentDeleting", "onAppointmentFormOpening", "onAppointmentRendered", "onAppointmentUpdated", "onAppointmentUpdating", "onCellClick", "onCellContextMenu", "onClick", "onKeyDown", "recurrenceEditMode", "recurrenceExceptionExpr", "recurrenceRuleExpr", "remoteFiltering", "resourceCellTemplate", "resources", "rtlEnabled", "scrolling", "selectedCellData", "shadeUntilCurrentTime", "showAllDayPanel", "showCurrentTimeIndicator", "startDateExpr", "startDateTimeZoneExpr", "startDayHour", "tabIndex", "textExpr", "timeCellTemplate", "timeZone", "toolbar", "useDropDownViewSwitcher", "views", "visible", "width"];
 
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
@@ -46,6 +50,7 @@ function _extends() { _extends = Object.assign || function (target) { for (var i
 
 var viewFunction = function viewFunction(_ref) {
   var currentViewConfig = _ref.currentViewConfig,
+      loadedResources = _ref.loadedResources,
       onViewRendered = _ref.onViewRendered,
       _ref$props = _ref.props,
       accessKey = _ref$props.accessKey,
@@ -79,7 +84,6 @@ var viewFunction = function viewFunction(_ref) {
       firstDayOfWeek = currentViewConfig.firstDayOfWeek,
       groupByDate = currentViewConfig.groupByDate,
       groupOrientation = currentViewConfig.groupOrientation,
-      groups = currentViewConfig.groups,
       hoursInterval = currentViewConfig.hoursInterval,
       indicatorTime = currentViewConfig.indicatorTime,
       indicatorUpdateInterval = currentViewConfig.indicatorUpdateInterval,
@@ -137,7 +141,7 @@ var viewFunction = function viewFunction(_ref) {
       "shadeUntilCurrentTime": shadeUntilCurrentTime,
       "crossScrollingEnabled": crossScrollingEnabled,
       "hoursInterval": hoursInterval,
-      "groups": groups,
+      "groups": loadedResources,
       "type": type,
       "indicatorTime": indicatorTime,
       "allowMultipleCellSelection": allowMultipleCellSelection,
@@ -168,6 +172,8 @@ var Scheduler = /*#__PURE__*/function (_InfernoComponent) {
       instance: undefined,
       viewDataProvider: undefined,
       cellsMetaData: undefined,
+      resourcePromisesMap: new Map(),
+      loadedResources: [],
       currentDate: _this.props.currentDate !== undefined ? _this.props.currentDate : _this.props.defaultCurrentDate,
       currentView: _this.props.currentView !== undefined ? _this.props.currentView : _this.props.defaultCurrentView
     };
@@ -185,6 +191,7 @@ var Scheduler = /*#__PURE__*/function (_InfernoComponent) {
     _this.showAppointmentPopup = _this.showAppointmentPopup.bind(_assertThisInitialized(_this));
     _this.showAppointmentTooltip = _this.showAppointmentTooltip.bind(_assertThisInitialized(_this));
     _this.dispose = _this.dispose.bind(_assertThisInitialized(_this));
+    _this.loadGroupResources = _this.loadGroupResources.bind(_assertThisInitialized(_this));
     _this.onViewRendered = _this.onViewRendered.bind(_assertThisInitialized(_this));
     _this.setCurrentView = _this.setCurrentView.bind(_assertThisInitialized(_this));
     _this.setCurrentDate = _this.setCurrentDate.bind(_assertThisInitialized(_this));
@@ -194,7 +201,13 @@ var Scheduler = /*#__PURE__*/function (_InfernoComponent) {
   var _proto = Scheduler.prototype;
 
   _proto.createEffects = function createEffects() {
-    return [new _inferno2.InfernoEffect(this.dispose, [])];
+    return [new _inferno2.InfernoEffect(this.dispose, []), new _inferno2.InfernoEffect(this.loadGroupResources, [this.props.groups, this.props.resources, this.state.resourcePromisesMap])];
+  };
+
+  _proto.updateEffects = function updateEffects() {
+    var _this$_effects$;
+
+    (_this$_effects$ = this._effects[1]) === null || _this$_effects$ === void 0 ? void 0 : _this$_effects$.update([this.props.groups, this.props.resources, this.state.resourcePromisesMap]);
   };
 
   _proto.dispose = function dispose() {
@@ -203,6 +216,21 @@ var Scheduler = /*#__PURE__*/function (_InfernoComponent) {
     return function () {
       _this2.state.instance.dispose();
     };
+  };
+
+  _proto.loadGroupResources = function loadGroupResources() {
+    var _this3 = this;
+
+    var _this$props = this.props,
+        groups = _this$props.groups,
+        resources = _this$props.resources;
+    (0, _utils2.loadResources)(groups, resources, this.state.resourcePromisesMap).then(function (loadedResources) {
+      _this3.setState(function (__state_argument) {
+        return {
+          loadedResources: loadedResources
+        };
+      });
+    });
   };
 
   _proto.onViewRendered = function onViewRendered(viewMetaData) {
@@ -315,9 +343,14 @@ var Scheduler = /*#__PURE__*/function (_InfernoComponent) {
       instance: this.state.instance,
       viewDataProvider: this.state.viewDataProvider,
       cellsMetaData: this.state.cellsMetaData,
+      resourcePromisesMap: this.state.resourcePromisesMap,
+      loadedResources: this.state.loadedResources,
       currentViewProps: this.currentViewProps,
       currentViewConfig: this.currentViewConfig,
+      dataAccessors: this.dataAccessors,
       startViewDate: this.startViewDate,
+      isVirtualScrolling: this.isVirtualScrolling,
+      timeZoneCalculator: this.timeZoneCalculator,
       onViewRendered: this.onViewRendered,
       setCurrentView: this.setCurrentView,
       setCurrentDate: this.setCurrentDate,
@@ -335,6 +368,14 @@ var Scheduler = /*#__PURE__*/function (_InfernoComponent) {
     key: "currentViewConfig",
     get: function get() {
       return (0, _views.getCurrentViewConfig)(this.currentViewProps, _extends({}, this.props, {
+        currentDate: this.props.currentDate !== undefined ? this.props.currentDate : this.state.currentDate,
+        currentView: this.props.currentView !== undefined ? this.props.currentView : this.state.currentView
+      }));
+    }
+  }, {
+    key: "dataAccessors",
+    get: function get() {
+      return (0, _common.createDataAccessors)(_extends({}, this.props, {
         currentDate: this.props.currentDate !== undefined ? this.props.currentDate : this.state.currentDate,
         currentView: this.props.currentView !== undefined ? this.props.currentView : this.state.currentView
       }));
@@ -359,6 +400,18 @@ var Scheduler = /*#__PURE__*/function (_InfernoComponent) {
       var viewDataGenerator = (0, _utils.getViewDataGeneratorByViewType)(type);
       var startViewDate = viewDataGenerator.getStartViewDate(options);
       return startViewDate;
+    }
+  }, {
+    key: "isVirtualScrolling",
+    get: function get() {
+      var _this$currentViewProp;
+
+      return this.props.scrolling.mode === "virtual" || ((_this$currentViewProp = this.currentViewProps.scrolling) === null || _this$currentViewProp === void 0 ? void 0 : _this$currentViewProp.mode) === "virtual";
+    }
+  }, {
+    key: "timeZoneCalculator",
+    get: function get() {
+      return (0, _common.createTimeZoneCalculator)(this.props.timeZone);
     }
   }, {
     key: "restAttributes",

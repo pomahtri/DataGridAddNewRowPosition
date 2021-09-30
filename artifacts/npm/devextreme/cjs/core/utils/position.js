@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/core/utils/position.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -13,8 +13,6 @@ exports.getDefaultAlignment = exports.getBoundingRect = void 0;
 var _config = _interopRequireDefault(require("../config"));
 
 var _type = require("../utils/type");
-
-var _dom_adapter = _interopRequireDefault(require("../dom_adapter"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -33,11 +31,7 @@ var getBoundingRect = function getBoundingRect(element) {
     };
   }
 
-  if (_dom_adapter.default.getDocumentElement()) {
-    return element.getBoundingClientRect();
-  }
-
-  return 0;
+  return element.getBoundingClientRect();
 };
 
 exports.getBoundingRect = getBoundingRect;

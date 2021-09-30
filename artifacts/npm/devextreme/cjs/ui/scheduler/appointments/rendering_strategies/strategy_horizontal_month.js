@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/appointments/rendering_strategies/strategy_horizontal_month.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -54,7 +54,7 @@ var HorizontalMonthRenderingStrategy = /*#__PURE__*/function (_HorizontalMonthLi
   var _proto = HorizontalMonthRenderingStrategy.prototype;
 
   _proto._getLeftPosition = function _getLeftPosition(settings) {
-    var fullWeekAppointmentWidth = this.getWorkspaceGroupWidth(settings.groupIndex);
+    var fullWeekAppointmentWidth = this.getGroupWidth(settings.groupIndex);
     return this._calculateMultiWeekAppointmentLeftOffset(settings.hMax, fullWeekAppointmentWidth);
   };
 
@@ -79,7 +79,7 @@ var HorizontalMonthRenderingStrategy = /*#__PURE__*/function (_HorizontalMonthLi
 
   _proto._getAppointmentParts = function _getAppointmentParts(geometry, settings) {
     var result = [];
-    var weekWidth = Math.round(this.getWorkspaceGroupWidth(settings.groupIndex));
+    var weekWidth = Math.round(this.getGroupWidth(settings.groupIndex));
 
     var _this$_getChunkWidths = this._getChunkWidths(geometry, settings, weekWidth),
         _this$_getChunkWidths2 = _slicedToArray(_this$_getChunkWidths, 3),
@@ -119,7 +119,7 @@ var HorizontalMonthRenderingStrategy = /*#__PURE__*/function (_HorizontalMonthLi
     return this.rtlEnabled ? max : max - width;
   };
 
-  _proto.getWorkspaceGroupWidth = function getWorkspaceGroupWidth(groupIndex) {
+  _proto.getGroupWidth = function getGroupWidth(groupIndex) {
     return (0, _positionHelper.getGroupWidth)(groupIndex, this.viewDataProvider, {
       intervalCount: this.options.intervalCount,
       currentDate: this.options.currentDate,

@@ -5,9 +5,10 @@ import SchedulerWorkSpace from './ui.scheduler.work_space.indicator';
 import dateUtils from '../../../core/utils/date';
 import { getBoundingRect } from '../../../core/utils/position';
 import { utils } from '../utils';
+import { hasWindow } from '../../../core/utils/window';
 import dxrMonthDateTableLayout from '../../../renovation/ui/scheduler/workspaces/month/date_table/layout.j';
 import { getViewStartByOptions, getCellText } from '../../../renovation/ui/scheduler/view_model/to_test/views/utils/month';
-import { calculateDayDuration, formatWeekday } from '../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
+import { formatWeekday } from '../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import { VIEWS } from '../constants';
 var MONTH_CLASS = 'dx-scheduler-work-space-month';
 var DATE_TABLE_CURRENT_DATE_CLASS = 'dx-scheduler-date-table-current-date';
@@ -51,7 +52,7 @@ class SchedulerWorkSpaceMonth extends SchedulerWorkSpace {
       var cells = this._getCells().slice(0, DAYS_IN_WEEK);
 
       cells.each((index, element) => {
-        averageWidth += getBoundingRect(element).width;
+        averageWidth += hasWindow() ? getBoundingRect(element).width : 0;
       });
       return cells.length === 0 ? undefined : averageWidth / DAYS_IN_WEEK;
     });
@@ -84,10 +85,6 @@ class SchedulerWorkSpaceMonth extends SchedulerWorkSpace {
 
   isIndicationAvailable() {
     return false;
-  }
-
-  getCellDuration() {
-    return calculateDayDuration(this.option('startDayHour'), this.option('endDayHour')) * 3600000;
   }
 
   getIntervalDuration() {

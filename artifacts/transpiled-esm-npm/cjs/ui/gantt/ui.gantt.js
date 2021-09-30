@@ -467,7 +467,7 @@ var Gantt = /*#__PURE__*/function (_Widget) {
     var filterColumn = columns.filter(function (c) {
       var _c$filterValues;
 
-      return c.filterValue || ((_c$filterValues = c.filterValues) === null || _c$filterValues === void 0 ? void 0 : _c$filterValues.length);
+      return (0, _type.isDefined)(c.filterValue) || ((_c$filterValues = c.filterValues) === null || _c$filterValues === void 0 ? void 0 : _c$filterValues.length);
     })[0];
     var sieveColumn = sortColumn || filterColumn;
     var isClearSieving = this.sieveColumn && !sieveColumn;

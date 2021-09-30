@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/diagram/ui.diagram.scroll_view.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -17,6 +17,8 @@ var _renderer = _interopRequireDefault(require("../../core/renderer"));
 var _ui = _interopRequireDefault(require("../widget/ui.widget"));
 
 var _scroll_view = _interopRequireDefault(require("../scroll_view"));
+
+var _calculate_scrollbar_width = require("../pivot_grid/utils/calculate_scrollbar_width");
 
 var _diagram = require("./diagram.importer");
 
@@ -52,7 +54,7 @@ var DiagramScrollView = /*#__PURE__*/function (_Widget) {
     _Widget.prototype._initMarkup.call(this);
 
     var $scrollViewWrapper = (0, _renderer.default)('<div>').appendTo(this.$element());
-    this._scrollView = this._createComponent($scrollViewWrapper, _scroll_view.default, {
+    var options = {
       direction: 'both',
       bounceEnabled: false,
       onScroll: function onScroll(_ref) {
@@ -60,7 +62,14 @@ var DiagramScrollView = /*#__PURE__*/function (_Widget) {
 
         _this._raiseOnScroll(scrollOffset.left, scrollOffset.top);
       }
-    });
+    };
+    var useNativeScrolling = this.option('useNativeScrolling');
+
+    if (useNativeScrolling !== undefined) {
+      options.useNative = useNativeScrolling;
+    }
+
+    this._scrollView = this._createComponent($scrollViewWrapper, _scroll_view.default, options);
 
     this._onCreateDiagramAction({
       $parent: (0, _renderer.default)(this._scrollView.content()),
@@ -100,7 +109,7 @@ var DiagramScrollView = /*#__PURE__*/function (_Widget) {
   };
 
   _proto.getScrollBarWidth = function getScrollBarWidth() {
-    return 0;
+    return this.option('useNativeScrolling') ? (0, _calculate_scrollbar_width.calculateScrollbarWidth)() : 0;
   };
 
   _proto.detachEvents = function detachEvents() {};
@@ -134,6 +143,9 @@ var DiagramScrollView = /*#__PURE__*/function (_Widget) {
       case 'onCreateDiagram':
         this._createOnCreateDiagramAction();
 
+        break;
+
+      case 'useNativeScrolling':
         break;
 
       default:

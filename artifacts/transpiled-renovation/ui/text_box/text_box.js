@@ -2,6 +2,8 @@
 
 exports.default = void 0;
 
+var _size = require("../../core/utils/size");
+
 var _renderer = _interopRequireDefault(require("../../core/renderer"));
 
 var _window = require("../../core/utils/window");
@@ -91,6 +93,18 @@ var TextBox = _ui.default.inherit({
     var $searchIcon = (0, _renderer.default)('<div>').addClass(ICON_CLASS).addClass(SEARCH_ICON_CLASS);
     $searchIcon.prependTo(this._input().parent());
     this._$searchIcon = $searchIcon;
+  },
+  _renderLabel: function _renderLabel() {
+    this.callBase();
+
+    if (this._$searchIcon && this._$label) {
+      var labelBeforeElement = this._$label.find('.dx-label-before');
+
+      var labelBeforeWidth = (0, _size.getWidth)(labelBeforeElement) + (0, _size.getOuterWidth)(this._$searchIcon);
+      labelBeforeElement.css('width', labelBeforeWidth);
+
+      this._$label.find('.dx-label').css('max-width', (0, _size.getWidth)(this._input().parent()) - labelBeforeWidth);
+    }
   },
   _optionChanged: function _optionChanged(args) {
     switch (args.name) {

@@ -98,11 +98,6 @@ var Map = Widget.inherit({
       routes: [],
       onRouteAdded: null,
       onRouteRemoved: null,
-      key: {
-        bing: '',
-        google: '',
-        googleStatic: ''
-      },
       apiKey: {
         bing: '',
         google: '',
@@ -130,15 +125,6 @@ var Map = Widget.inherit({
         focusStateEnabled: true
       }
     }]);
-  },
-  _setDeprecatedOptions: function _setDeprecatedOptions() {
-    this.callBase();
-    extend(this._deprecatedOptions, {
-      'key': {
-        since: '20.2',
-        alias: 'apiKey'
-      }
-    });
   },
   _init: function _init() {
     this.callBase();
@@ -256,7 +242,6 @@ var Map = Widget.inherit({
 
         break;
 
-      case 'key':
       case 'apiKey':
         errors.log('W1001');
         break;

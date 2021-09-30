@@ -8,6 +8,8 @@ var _window = require("../../core/utils/window");
 
 var _uiGrid_core = require("./ui.grid_core.virtual_columns_core");
 
+var _type = require("../../core/utils/type");
+
 var DEFAULT_COLUMN_WIDTH = 50;
 var VirtualScrollingRowsViewExtender = {
   _resizeCore: function _resizeCore() {
@@ -115,17 +117,29 @@ var ColumnsControllerExtender = function () {
       });
       this._renderTime = new Date() - date;
     },
-    setScrollPosition: function setScrollPosition(position) {
-      var that = this;
-      var renderingThreshold = that.option('scrolling.columnRenderingThreshold');
+    getScrollingTimeout: function getScrollingTimeout() {
+      var renderingThreshold = this.option('scrolling.columnRenderingThreshold');
+      var renderAsync = this.option('scrolling.renderAsync');
+      var scrollingTimeout = 0;
 
-      if (that._renderTime > renderingThreshold) {
-        clearTimeout(that._changedTimeout);
-        that._changedTimeout = setTimeout(function () {
-          that._setScrollPositionCore(position);
-        }, that.option('scrolling.timeout'));
+      if (!(0, _type.isDefined)(renderAsync) && this._renderTime > renderingThreshold || renderAsync) {
+        scrollingTimeout = this.option('scrolling.timeout');
+      }
+
+      return scrollingTimeout;
+    },
+    setScrollPosition: function setScrollPosition(position) {
+      var _this = this;
+
+      var scrollingTimeout = this.getScrollingTimeout();
+
+      if (scrollingTimeout > 0) {
+        clearTimeout(this._changedTimeout);
+        this._changedTimeout = setTimeout(function () {
+          _this._setScrollPositionCore(position);
+        }, scrollingTimeout);
       } else {
-        that._setScrollPositionCore(position);
+        this._setScrollPositionCore(position);
       }
     },
     isVirtualMode: function isVirtualMode() {

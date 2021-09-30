@@ -1,7 +1,7 @@
 /**
 * DevExtreme (cjs/ui/scheduler/workspaces/ui.scheduler.timeline_month.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -37,7 +37,6 @@ function _inheritsLoose(subClass, superClass) { subClass.prototype = Object.crea
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
 var TIMELINE_CLASS = 'dx-scheduler-timeline-month';
-var toMs = _date.default.dateToMilliseconds;
 
 var SchedulerTimelineMonth = /*#__PURE__*/function (_SchedulerTimeline) {
   _inheritsLoose(SchedulerTimelineMonth, _SchedulerTimeline);
@@ -64,10 +63,6 @@ var SchedulerTimelineMonth = /*#__PURE__*/function (_SchedulerTimeline) {
 
   _proto._calculateDurationInCells = function _calculateDurationInCells(timeDiff) {
     return timeDiff / this.getCellDuration();
-  };
-
-  _proto.getCellDuration = function getCellDuration() {
-    return toMs('day');
   };
 
   _proto.isIndicatorVisible = function isIndicatorVisible() {

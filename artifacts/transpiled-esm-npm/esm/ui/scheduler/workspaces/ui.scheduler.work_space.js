@@ -27,7 +27,7 @@ var {
 import VerticalShader from '../shaders/ui.scheduler.current_time_shader.vertical';
 import AppointmentDragBehavior from '../appointmentDragBehavior';
 import { APPOINTMENT_SETTINGS_KEY } from '../constants';
-import { FIXED_CONTAINER_CLASS, VIRTUAL_CELL_CLASS, TIME_PANEL_CLASS, DATE_TABLE_CLASS, DATE_TABLE_ROW_CLASS, GROUP_ROW_CLASS, GROUP_HEADER_CONTENT_CLASS, VERTICAL_GROUP_COUNT_CLASSES, HORIZONTAL_GROUP_COUNT_CLASSES } from '../classes';
+import { FIXED_CONTAINER_CLASS, VIRTUAL_CELL_CLASS, TIME_PANEL_CLASS, DATE_TABLE_CLASS, DATE_TABLE_ROW_CLASS, GROUP_ROW_CLASS, GROUP_HEADER_CONTENT_CLASS, VERTICAL_GROUP_COUNT_CLASSES } from '../classes';
 import WidgetObserver from '../base/widgetObserver';
 import { resetPosition, locate } from '../../../animation/translator';
 import { VirtualScrollingDispatcher, VirtualScrollingRenderer } from './ui.scheduler.virtual_scrolling';
@@ -41,9 +41,9 @@ import dxrDateHeader from '../../../renovation/ui/scheduler/workspaces/base/head
 import CellsSelectionState from './cells_selection_state';
 import { Cache } from './cache';
 import { CellsSelectionController } from './cells_selection_controller';
-import { calculateViewStartDate, getViewStartByOptions, validateDayHours, getStartViewDateTimeOffset, isDateAndTimeView, calculateIsGroupedAllDayPanel } from '../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
+import { calculateViewStartDate, getViewStartByOptions, validateDayHours, getStartViewDateTimeOffset, isDateAndTimeView, calculateIsGroupedAllDayPanel, getCellDuration } from '../../../renovation/ui/scheduler/view_model/to_test/views/utils/base';
 import { createResourcesTree, getCellGroups, getGroupsObjectFromGroupsArray, getGroupCount } from '../resources/utils';
-import Semaphore from '../semaphore';
+import { Semaphore } from '../../../renovation/ui/scheduler/semaphore';
 import { getCellWidth, getCellHeight, getAllDayHeight, getMaxAllowedPosition, PositionHelper } from './helpers/positionHelper';
 import { utils } from '../utils';
 var abstract = WidgetObserver.abstract;
@@ -512,6 +512,9 @@ class SchedulerWorkSpace extends WidgetObserver {
     }
 
     this.updateHeaderEmptyCellWidth();
+
+    this._updateScrollable();
+
     this.cache.clear();
   }
 
@@ -1266,7 +1269,7 @@ class SchedulerWorkSpace extends WidgetObserver {
   }
 
   getRoundedCellWidth(groupIndex, startIndex, cellCount) {
-    if (groupIndex < 0) {
+    if (groupIndex < 0 || !hasWindow()) {
       return 0;
     }
 
@@ -1282,7 +1285,8 @@ class SchedulerWorkSpace extends WidgetObserver {
 
     for (var i = startIndex; i < totalCellCount + cellCount; i++) {
       var element = $($cells).eq(i).get(0);
-      width = element ? width + getBoundingRect(element).width : width;
+      var elementWidth = element ? getBoundingRect(element).width : 0;
+      width = width + elementWidth;
     }
 
     return width / (totalCellCount + cellCount - startIndex);
@@ -1338,8 +1342,7 @@ class SchedulerWorkSpace extends WidgetObserver {
   }
 
   getCellDuration() {
-    // TODO move to the ModelProvider
-    return 3600000 * this.option('hoursInterval');
+    return getCellDuration(this.type, this.option('startDayHour'), this.option('endDayHour'), this.option('hoursInterval'));
   }
 
   getIntervalDuration(allDay) {
@@ -1665,14 +1668,14 @@ class SchedulerWorkSpace extends WidgetObserver {
   _getDateTableDOMElementsInfo() {
     var dateTableCells = this._getAllCells(false);
 
-    if (!dateTableCells.length) {
+    if (!dateTableCells.length || !hasWindow()) {
       return [[{}]];
     }
 
     var dateTable = this._getDateTable(); // We should use getBoundingClientRect in renovation
 
 
-    var dateTableRect = dateTable.get(0) ? getBoundingRect(dateTable.get(0)) : 0;
+    var dateTableRect = getBoundingRect(dateTable.get(0));
     var columnsCount = this.viewDataProvider.getColumnsCount();
     var result = [];
     dateTableCells.each((index, cell) => {
@@ -1690,7 +1693,7 @@ class SchedulerWorkSpace extends WidgetObserver {
   _getAllDayPanelDOMElementsInfo() {
     var result = [];
 
-    if (this.isAllDayPanelVisible && !this._isVerticalGroupedWorkSpace()) {
+    if (this.isAllDayPanelVisible && !this._isVerticalGroupedWorkSpace() && hasWindow()) {
       var allDayCells = this._getAllCells(true);
 
       if (!allDayCells.length) {
@@ -2446,7 +2449,7 @@ class SchedulerWorkSpace extends WidgetObserver {
   }
 
   _detachGroupCountClass() {
-    [...VERTICAL_GROUP_COUNT_CLASSES, ...HORIZONTAL_GROUP_COUNT_CLASSES].forEach(className => {
+    [...VERTICAL_GROUP_COUNT_CLASSES].forEach(className => {
       this.$element().removeClass(className);
     });
   }

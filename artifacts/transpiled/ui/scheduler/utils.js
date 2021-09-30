@@ -29,7 +29,7 @@ var utils = {
       var settings = utils.dataAccessors.getAppointmentSettings(element);
       return settings === null || settings === void 0 ? void 0 : settings.info;
     },
-    create: function create(instance, fields, currentDataAccessors, forceIsoDateParsing, getDateSerializationFormat, setDateSerializationFormat) {
+    create: function create(fields, currentDataAccessors, forceIsoDateParsing, getDateSerializationFormat, setDateSerializationFormat) {
       var isDateField = function isDateField(field) {
         return field === 'startDate' || field === 'endDate';
       };
@@ -49,13 +49,13 @@ var utils = {
 
           if (isDateField(name)) {
             dateGetter = function dateGetter() {
-              var value = getter.apply(instance, arguments);
+              var value = getter.apply(void 0, arguments);
 
               if (forceIsoDateParsing) {
                 if (!getDateSerializationFormat()) {
                   var format = _date_serialization.default.getDateSerializationFormat(value);
 
-                  if (format) {
+                  if (format && setDateSerializationFormat) {
                     setDateSerializationFormat(format);
                   }
                 }

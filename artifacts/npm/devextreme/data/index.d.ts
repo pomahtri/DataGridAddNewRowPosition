@@ -1,7 +1,7 @@
 /**
 * DevExtreme (data/index.d.ts)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -12,7 +12,7 @@
  */
 export type SearchOperation = '=' | '<>' | '>' | '>=' | '<' | '<=' | 'startswith' | 'endswith' | 'contains' | 'notcontains';
 
-type KeySelector<T> = string | ((source: T) => string);
+type KeySelector<T> = string | ((source: T) => string | number | Date | Object);
 
 type BaseGroupDescriptor<T> = {
     selector: KeySelector<T>;
@@ -39,7 +39,7 @@ export type SortDescriptor<T> = GroupDescriptor<T>;
  * @public
  * @type object
  */
-export type SelectDescriptor<T> = KeySelector<T>;
+export type SelectDescriptor<T> = string | Array<string> | ((source: T) => any);
 /**
  * @docid
  * @public
@@ -125,7 +125,7 @@ export type SummaryDescriptor<T> = KeySelector<T> | BaseGroupDescriptor<T> & {
      * @public
      * @type object
      */
-    select?: SelectDescriptor<T> | Array<SelectDescriptor<T>>;
+    select?: SelectDescriptor<T>;
     /**
      * @docid
      * @public

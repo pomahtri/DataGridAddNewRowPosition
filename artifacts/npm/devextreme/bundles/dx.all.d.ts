@@ -1,7 +1,7 @@
 /**
 * DevExtreme (dx.all.d.ts)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -1354,13 +1354,11 @@ declare module DevExpress.data {
     /**
      * [descr:DataSource.select()]
      */
-    select(): SelectDescriptor<TValue> | Array<SelectDescriptor<TValue>>;
+    select(): SelectDescriptor<TValue>;
     /**
      * [descr:DataSource.select(expr)]
      */
-    select(
-      expr: SelectDescriptor<TValue> | Array<SelectDescriptor<TValue>>
-    ): void;
+    select(expr: SelectDescriptor<TValue>): void;
     /**
      * [descr:DataSource.sort()]
      */
@@ -1467,7 +1465,7 @@ declare module DevExpress.data {
     /**
      * [descr:DataSourceOptions.select]
      */
-    select?: SelectDescriptor<TValue> | Array<SelectDescriptor<TValue>>;
+    select?: SelectDescriptor<TValue>;
     /**
      * [descr:DataSourceOptions.sort]
      */
@@ -1528,7 +1526,9 @@ declare module DevExpress.data {
   /**
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please describe your scenario in the following GitHub Issue, and we will suggest a public alternative: {@link https://github.com/DevExpress/DevExtreme/issues/17885|Internal Types}.
    */
-  type KeySelector<T> = string | ((source: T) => string);
+  type KeySelector<T> =
+    | string
+    | ((source: T) => string | number | Date | Object);
   /**
    * [descr:LoadOptions]
    * @deprecated Attention! This type is for internal purposes only. If you used it previously, please describe your scenario in the following GitHub Issue, and we will suggest a public alternative: {@link https://github.com/DevExpress/DevExtreme/issues/17885|Internal Types}.
@@ -1581,7 +1581,7 @@ declare module DevExpress.data {
     /**
      * [descr:LoadOptions.select]
      */
-    select?: SelectDescriptor<T> | Array<SelectDescriptor<T>>;
+    select?: SelectDescriptor<T>;
     /**
      * [descr:LoadOptions.skip]
      */
@@ -2360,7 +2360,10 @@ declare module DevExpress.data {
   /**
    * [descr:SelectDescriptor]
    */
-  export type SelectDescriptor<T> = KeySelector<T>;
+  export type SelectDescriptor<T> =
+    | string
+    | Array<string>
+    | ((source: T) => any);
   /**
    * [descr:Utils.setErrorHandler]
    */
@@ -6951,6 +6954,10 @@ declare module DevExpress.ui {
        * [descr:GridBaseOptions.scrolling.useNative]
        */
       useNative?: boolean | 'auto';
+      /**
+       * [descr:GridBaseOptions.scrolling.renderAsync]
+       */
+      renderAsync?: boolean;
     }
     /**
      * @deprecated Attention! This type is for internal purposes only. If you used it previously, please describe your scenario in the following GitHub Issue, and we will suggest a public alternative: {@link https://github.com/DevExpress/DevExtreme/issues/17885|Internal Types}.
@@ -7873,6 +7880,14 @@ declare module DevExpress.ui {
      * [descr:dxDiagram.updateToolbox()]
      */
     updateToolbox(): void;
+    /**
+     * [descr:dxDiagram.fitToContent()]
+     */
+    fitToContent(): void;
+    /**
+     * [descr:dxDiagram.fitToWidth()]
+     */
+    fitToWidth(): void;
   }
   module dxDiagram {
     export type ContentReadyEvent = DevExpress.events.EventInfo<dxDiagram>;
@@ -9195,6 +9210,10 @@ declare module DevExpress.ui {
      */
     simpleView?: boolean;
     /**
+     * [descr:dxDiagramOptions.useNativeScrolling]
+     */
+    useNativeScrolling?: boolean;
+    /**
      * [descr:dxDiagramOptions.snapToGrid]
      */
     snapToGrid?: boolean;
@@ -9978,12 +9997,7 @@ declare module DevExpress.ui {
      * [descr:dxDropDownButtonItem.onClick]
      */
     onClick?:
-      | ((e: {
-          component?: dxDropDownButton;
-          element?: DevExpress.core.DxElement;
-          model?: any;
-          event?: DevExpress.events.DxEvent;
-        }) => void)
+      | ((e: DevExpress.ui.dxDropDownButton.ItemClickEvent) => void)
       | string;
   }
   /**
@@ -11810,6 +11824,10 @@ declare module DevExpress.ui {
      * [descr:dxFormOptions.labelLocation]
      */
     labelLocation?: 'left' | 'right' | 'top';
+    /**
+     * [descr:dxFormOptions.labelMode]
+     */
+    labelMode?: 'default' | 'floating' | 'static' | 'hidden';
     /**
      * [descr:dxFormOptions.minColWidth]
      */
@@ -14375,20 +14393,6 @@ declare module DevExpress.ui {
    */
   export interface dxLookupOptions extends dxDropDownListOptions<dxLookup> {
     /**
-     * [descr:dxLookupOptions.animation]
-     * @deprecated [depNote:dxLookupOptions.animation]
-     */
-    animation?: {
-      /**
-       * [descr:dxLookupOptions.animation.hide]
-       */
-      hide?: AnimationConfig;
-      /**
-       * [descr:dxLookupOptions.animation.show]
-       */
-      show?: AnimationConfig;
-    };
-    /**
      * [descr:dxLookupOptions.applyButtonText]
      */
     applyButtonText?: string;
@@ -14408,13 +14412,6 @@ declare module DevExpress.ui {
      * [descr:dxLookupOptions.clearButtonText]
      */
     clearButtonText?: string;
-    /**
-     * [descr:dxLookupOptions.closeOnOutsideClick]
-     * @deprecated [depNote:dxLookupOptions.closeOnOutsideClick]
-     */
-    closeOnOutsideClick?:
-      | boolean
-      | ((event: DevExpress.events.DxEvent) => boolean);
     /**
      * [descr:dxLookupOptions.fieldTemplate]
      */
@@ -14464,11 +14461,6 @@ declare module DevExpress.ui {
      */
     onScroll?: (e: DevExpress.ui.dxLookup.ScrollEvent) => void;
     /**
-     * [descr:dxLookupOptions.onTitleRendered]
-     * @deprecated [depNote:dxLookupOptions.onTitleRendered]
-     */
-    onTitleRendered?: (e: DevExpress.ui.dxLookup.TitleRenderedEvent) => void;
-    /**
      * [descr:dxLookupOptions.onValueChanged]
      */
     onValueChanged?: (e: DevExpress.ui.dxLookup.ValueChangedEvent) => void;
@@ -14484,21 +14476,6 @@ declare module DevExpress.ui {
      * [descr:dxLookupOptions.placeholder]
      */
     placeholder?: string;
-    /**
-     * [descr:dxLookupOptions.popupHeight]
-     * @deprecated [depNote:dxLookupOptions.popupHeight]
-     */
-    popupHeight?: number | string | (() => number | string);
-    /**
-     * [descr:dxLookupOptions.popupWidth]
-     * @deprecated [depNote:dxLookupOptions.popupWidth]
-     */
-    popupWidth?: number | string | (() => number | string);
-    /**
-     * [descr:dxLookupOptions.position]
-     * @deprecated [depNote:dxLookupOptions.position]
-     */
-    position?: PositionConfig;
     /**
      * [descr:dxLookupOptions.pullRefreshEnabled]
      */
@@ -14524,11 +14501,6 @@ declare module DevExpress.ui {
      */
     searchPlaceholder?: string;
     /**
-     * [descr:dxLookupOptions.shading]
-     * @deprecated [depNote:dxLookupOptions.shading]
-     */
-    shading?: boolean;
-    /**
      * [descr:dxLookupOptions.showCancelButton]
      */
     showCancelButton?: boolean;
@@ -14536,25 +14508,6 @@ declare module DevExpress.ui {
      * [descr:dxLookupOptions.showClearButton]
      */
     showClearButton?: boolean;
-    /**
-     * [descr:dxLookupOptions.showPopupTitle]
-     * @deprecated [depNote:dxLookupOptions.showPopupTitle]
-     */
-    showPopupTitle?: boolean;
-    /**
-     * [descr:dxLookupOptions.title]
-     * @deprecated [depNote:dxLookupOptions.title]
-     */
-    title?: string;
-    /**
-     * [descr:dxLookupOptions.titleTemplate]
-     * @deprecated [depNote:dxLookupOptions.titleTemplate]
-     */
-    titleTemplate?:
-      | DevExpress.core.template
-      | ((
-          titleElement: DevExpress.core.DxElement
-        ) => string | DevExpress.core.UserDefinedElement);
     /**
      * [descr:dxLookupOptions.useNativeScrolling]
      */
@@ -14669,26 +14622,6 @@ declare module DevExpress.ui {
      * [descr:dxMapOptions.height]
      */
     height?: number | string | (() => number | string);
-    /**
-     * [descr:dxMapOptions.key]
-     * @deprecated [depNote:dxMapOptions.key]
-     */
-    key?:
-      | string
-      | {
-          /**
-           * [descr:dxMapOptions.key.bing]
-           */
-          bing?: string;
-          /**
-           * [descr:dxMapOptions.key.google]
-           */
-          google?: string;
-          /**
-           * [descr:dxMapOptions.key.googleStatic]
-           */
-          googleStatic?: string;
-        };
     /**
      * [descr:dxMapOptions.markerIconSrc]
      */
@@ -19137,6 +19070,14 @@ declare module DevExpress.ui {
      */
     inputAttr?: any;
     /**
+     * [descr:dxTextEditorOptions.label]
+     */
+    label?: boolean;
+    /**
+     * [descr:dxTextEditorOptions.labelMode]
+     */
+    labelMode?: 'static' | 'floating' | 'hidden';
+    /**
      * [descr:dxTextEditorOptions.mask]
      */
     mask?: string;
@@ -19188,11 +19129,6 @@ declare module DevExpress.ui {
      * [descr:dxTextEditorOptions.onKeyDown]
      */
     onKeyDown?: (e: DevExpress.events.NativeEventInfo<TComponent>) => void;
-    /**
-     * [descr:dxTextEditorOptions.onKeyPress]
-     * @deprecated [depNote:dxTextEditorOptions.onKeyPress]
-     */
-    onKeyPress?: (e: DevExpress.events.NativeEventInfo<TComponent>) => void;
     /**
      * [descr:dxTextEditorOptions.onKeyUp]
      */

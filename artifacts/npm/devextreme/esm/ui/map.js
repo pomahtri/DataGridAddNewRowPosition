@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/map.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -106,11 +106,6 @@ var Map = Widget.inherit({
       routes: [],
       onRouteAdded: null,
       onRouteRemoved: null,
-      key: {
-        bing: '',
-        google: '',
-        googleStatic: ''
-      },
       apiKey: {
         bing: '',
         google: '',
@@ -138,15 +133,6 @@ var Map = Widget.inherit({
         focusStateEnabled: true
       }
     }]);
-  },
-  _setDeprecatedOptions: function _setDeprecatedOptions() {
-    this.callBase();
-    extend(this._deprecatedOptions, {
-      'key': {
-        since: '20.2',
-        alias: 'apiKey'
-      }
-    });
   },
   _init: function _init() {
     this.callBase();
@@ -264,7 +250,6 @@ var Map = Widget.inherit({
 
         break;
 
-      case 'key':
       case 'apiKey':
         errors.log('W1001');
         break;

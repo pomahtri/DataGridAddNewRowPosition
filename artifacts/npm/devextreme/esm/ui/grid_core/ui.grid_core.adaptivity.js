@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/grid_core/ui.grid_core.adaptivity.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -50,7 +50,7 @@ var GROUP_CELL_CLASS = 'dx-group-cell';
 var GROUP_ROW_CLASS = 'dx-group-row';
 var EXPAND_ARIA_NAME = 'dxDataGrid-ariaAdaptiveExpand';
 var COLLAPSE_ARIA_NAME = 'dxDataGrid-ariaAdaptiveCollapse';
-var NEW_SCROLLING_MODE = 'scrolling.newMode';
+var LEGACY_SCROLLING_MODE = 'scrolling.legacyMode';
 
 function getColumnId(that, column) {
   return that._columnsController.getColumnId(column);
@@ -1074,6 +1074,7 @@ export var adaptivityModule = {
           }
 
           var expandRowIndex = gridCoreUtils.getIndexByKey(this._adaptiveExpandedKey, items);
+          var newMode = this.option(LEGACY_SCROLLING_MODE) === false;
 
           if (expandRowIndex >= 0) {
             var item = items[expandRowIndex];
@@ -1087,7 +1088,7 @@ export var adaptivityModule = {
               isNewRow: item.isNewRow,
               values: item.values
             });
-          } else if (changeType === 'refresh' && !(this.option(NEW_SCROLLING_MODE) && change.repaintChangesOnly)) {
+          } else if (changeType === 'refresh' && !(newMode && change.repaintChangesOnly)) {
             this._adaptiveExpandedKey = undefined;
           }
 

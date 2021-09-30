@@ -3,17 +3,9 @@
 exports.calculateRowHeight = calculateRowHeight;
 exports.calculateTextHeight = calculateTextHeight;
 exports.calculateTargetRectWidth = calculateTargetRectWidth;
-exports.drawLine = drawLine;
-exports.drawRect = drawRect;
-exports.drawTextInRect = drawTextInRect;
+exports.getTextLines = getTextLines;
 
 var _type = require("../../../core/utils/type");
-
-var _extend = require("../../../core/utils/extend");
-
-function round(value) {
-  return Math.round(value * 1000) / 1000; // checked with browser zoom - 500%
-}
 
 function getTextLines(doc, text, font, _ref) {
   var wordWrapEnabled = _ref.wordWrapEnabled,
@@ -79,44 +71,4 @@ function calculateRowHeight(doc, cells, columnWidths) {
   }
 
   return rowHeight;
-}
-
-function drawLine(doc, startX, startY, endX, endY) {
-  doc.line(round(startX), round(startY), round(endX), round(endY));
-}
-
-function drawRect(doc, x, y, width, height, style) {
-  if ((0, _type.isDefined)(style)) {
-    doc.rect(round(x), round(y), round(width), round(height), style);
-  } else {
-    doc.rect(round(x), round(y), round(width), round(height));
-  }
-}
-
-function getLineHeightShift(doc) {
-  var DEFAULT_LINE_HEIGHT = 1.15; // TODO: check lineHeightFactor from text options. Currently supports only doc options - https://github.com/MrRio/jsPDF/issues/3234
-
-  return (doc.getLineHeightFactor() - DEFAULT_LINE_HEIGHT) * doc.getFontSize();
-}
-
-function drawTextInRect(doc, text, rect, verticalAlign, wordWrapEnabled, jsPdfTextOptions) {
-  var textArray = getTextLines(doc, text, doc.getFont(), {
-    wordWrapEnabled: wordWrapEnabled,
-    targetRectWidth: rect.w
-  });
-  var linesCount = textArray.length;
-  var heightOfOneLine = calculateTextHeight(doc, textArray[0], doc.getFont(), {
-    wordWrapEnabled: false
-  });
-  var vAlign = verticalAlign !== null && verticalAlign !== void 0 ? verticalAlign : 'middle';
-  var verticalAlignCoefficientsMap = {
-    top: 0,
-    middle: 0.5,
-    bottom: 1
-  };
-  var y = rect.y + rect.h * verticalAlignCoefficientsMap[vAlign] - heightOfOneLine * (linesCount - 1) * verticalAlignCoefficientsMap[vAlign] + getLineHeightShift(doc);
-  var textOptions = (0, _extend.extend)({
-    baseline: vAlign
-  }, jsPdfTextOptions);
-  doc.text(textArray.join('\n'), round(rect.x), round(y), textOptions);
 }

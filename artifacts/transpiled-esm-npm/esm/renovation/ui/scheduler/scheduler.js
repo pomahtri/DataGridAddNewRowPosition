@@ -9,9 +9,12 @@ import { getCurrentViewConfig, getCurrentViewProps } from "./model/views";
 import { WorkSpace } from "./workspaces/base/work_space";
 import { SchedulerToolbar } from "./header/header";
 import { getViewDataGeneratorByViewType } from "../../../ui/scheduler/workspaces/view_model/utils";
+import { createDataAccessors, createTimeZoneCalculator } from "./common";
+import { loadResources } from "../../../ui/scheduler/resources/utils";
 export var viewFunction = _ref => {
   var {
     currentViewConfig,
+    loadedResources,
     onViewRendered,
     props: {
       accessKey,
@@ -48,7 +51,6 @@ export var viewFunction = _ref => {
     firstDayOfWeek,
     groupByDate,
     groupOrientation,
-    groups,
     hoursInterval,
     indicatorTime,
     indicatorUpdateInterval,
@@ -107,7 +109,7 @@ export var viewFunction = _ref => {
       "shadeUntilCurrentTime": shadeUntilCurrentTime,
       "crossScrollingEnabled": crossScrollingEnabled,
       "hoursInterval": hoursInterval,
-      "groups": groups,
+      "groups": loadedResources,
       "type": type,
       "indicatorTime": indicatorTime,
       "allowMultipleCellSelection": allowMultipleCellSelection,
@@ -128,6 +130,8 @@ export class Scheduler extends InfernoComponent {
       instance: undefined,
       viewDataProvider: undefined,
       cellsMetaData: undefined,
+      resourcePromisesMap: new Map(),
+      loadedResources: [],
       currentDate: this.props.currentDate !== undefined ? this.props.currentDate : this.props.defaultCurrentDate,
       currentView: this.props.currentView !== undefined ? this.props.currentView : this.props.defaultCurrentView
     };
@@ -145,19 +149,38 @@ export class Scheduler extends InfernoComponent {
     this.showAppointmentPopup = this.showAppointmentPopup.bind(this);
     this.showAppointmentTooltip = this.showAppointmentTooltip.bind(this);
     this.dispose = this.dispose.bind(this);
+    this.loadGroupResources = this.loadGroupResources.bind(this);
     this.onViewRendered = this.onViewRendered.bind(this);
     this.setCurrentView = this.setCurrentView.bind(this);
     this.setCurrentDate = this.setCurrentDate.bind(this);
   }
 
   createEffects() {
-    return [new InfernoEffect(this.dispose, [])];
+    return [new InfernoEffect(this.dispose, []), new InfernoEffect(this.loadGroupResources, [this.props.groups, this.props.resources, this.state.resourcePromisesMap])];
+  }
+
+  updateEffects() {
+    var _this$_effects$;
+
+    (_this$_effects$ = this._effects[1]) === null || _this$_effects$ === void 0 ? void 0 : _this$_effects$.update([this.props.groups, this.props.resources, this.state.resourcePromisesMap]);
   }
 
   dispose() {
     return () => {
       this.state.instance.dispose();
     };
+  }
+
+  loadGroupResources() {
+    var {
+      groups,
+      resources
+    } = this.props;
+    loadResources(groups, resources, this.state.resourcePromisesMap).then(loadedResources => {
+      this.setState(__state_argument => ({
+        loadedResources: loadedResources
+      }));
+    });
   }
 
   get currentViewProps() {
@@ -169,6 +192,13 @@ export class Scheduler extends InfernoComponent {
 
   get currentViewConfig() {
     return getCurrentViewConfig(this.currentViewProps, _extends({}, this.props, {
+      currentDate: this.props.currentDate !== undefined ? this.props.currentDate : this.state.currentDate,
+      currentView: this.props.currentView !== undefined ? this.props.currentView : this.state.currentView
+    }));
+  }
+
+  get dataAccessors() {
+    return createDataAccessors(_extends({}, this.props, {
       currentDate: this.props.currentDate !== undefined ? this.props.currentDate : this.state.currentDate,
       currentView: this.props.currentView !== undefined ? this.props.currentView : this.state.currentView
     }));
@@ -193,6 +223,16 @@ export class Scheduler extends InfernoComponent {
     var viewDataGenerator = getViewDataGeneratorByViewType(type);
     var startViewDate = viewDataGenerator.getStartViewDate(options);
     return startViewDate;
+  }
+
+  get isVirtualScrolling() {
+    var _this$currentViewProp;
+
+    return this.props.scrolling.mode === "virtual" || ((_this$currentViewProp = this.currentViewProps.scrolling) === null || _this$currentViewProp === void 0 ? void 0 : _this$currentViewProp.mode) === "virtual";
+  }
+
+  get timeZoneCalculator() {
+    return createTimeZoneCalculator(this.props.timeZone);
   }
 
   onViewRendered(viewMetaData) {
@@ -311,9 +351,14 @@ export class Scheduler extends InfernoComponent {
       instance: this.state.instance,
       viewDataProvider: this.state.viewDataProvider,
       cellsMetaData: this.state.cellsMetaData,
+      resourcePromisesMap: this.state.resourcePromisesMap,
+      loadedResources: this.state.loadedResources,
       currentViewProps: this.currentViewProps,
       currentViewConfig: this.currentViewConfig,
+      dataAccessors: this.dataAccessors,
       startViewDate: this.startViewDate,
+      isVirtualScrolling: this.isVirtualScrolling,
+      timeZoneCalculator: this.timeZoneCalculator,
       onViewRendered: this.onViewRendered,
       setCurrentView: this.setCurrentView,
       setCurrentDate: this.setCurrentDate,

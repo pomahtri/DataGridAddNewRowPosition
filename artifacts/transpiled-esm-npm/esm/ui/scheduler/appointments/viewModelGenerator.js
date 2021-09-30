@@ -17,15 +17,15 @@ export class AppointmentViewModel {
     this.renderingStrategy = new RenderingStrategy(options);
   }
 
-  generate(options) {
+  generate(filteredItems, options) {
     var {
       isRenovatedAppointments,
-      filteredItems,
       appointmentRenderingStrategyName
     } = options;
     var appointments = filteredItems ? filteredItems.slice() : [];
     this.initRenderingStrategy(options);
-    var positionMap = this.getRenderingStrategy().createTaskPositionMap(appointments); // TODO - appointments are mutated inside!
+    var renderingStrategy = this.getRenderingStrategy();
+    var positionMap = renderingStrategy.createTaskPositionMap(appointments); // TODO - appointments are mutated inside!
 
     var viewModel = this.postProcess(appointments, positionMap, appointmentRenderingStrategyName, isRenovatedAppointments);
 

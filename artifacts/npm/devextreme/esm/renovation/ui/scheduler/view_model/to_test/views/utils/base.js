@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/renovation/ui/scheduler/view_model/to_test/views/utils/base.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -117,3 +117,15 @@ export var getTotalCellCountByCompleteData = completeData => completeData[comple
 export var getTotalRowCountByCompleteData = completeData => completeData.length;
 export var getDisplayedCellCount = (displayedCellCount, completeData) => displayedCellCount !== null && displayedCellCount !== void 0 ? displayedCellCount : getTotalCellCountByCompleteData(completeData);
 export var getDisplayedRowCount = (displayedRowCount, completeData) => displayedRowCount !== null && displayedRowCount !== void 0 ? displayedRowCount : getTotalRowCountByCompleteData(completeData);
+export var getCellDuration = (viewType, startDayHour, endDayHour, hoursInterval) => {
+  switch (viewType) {
+    case "month":
+      return calculateDayDuration(startDayHour, endDayHour) * 3600000;
+
+    case "timelineMonth":
+      return dateUtils.dateToMilliseconds("day");
+
+    default:
+      return 3600000 * hoursInterval;
+  }
+};

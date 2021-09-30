@@ -409,7 +409,7 @@ class Gantt extends Widget {
     var filterColumn = columns.filter(c => {
       var _c$filterValues;
 
-      return c.filterValue || ((_c$filterValues = c.filterValues) === null || _c$filterValues === void 0 ? void 0 : _c$filterValues.length);
+      return isDefined(c.filterValue) || ((_c$filterValues = c.filterValues) === null || _c$filterValues === void 0 ? void 0 : _c$filterValues.length);
     })[0];
     var sieveColumn = sortColumn || filterColumn;
     var isClearSieving = this.sieveColumn && !sieveColumn;

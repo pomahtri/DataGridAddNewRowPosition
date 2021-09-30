@@ -71,19 +71,7 @@ var HorizontalGroupedStrategy = /*#__PURE__*/function () {
   };
 
   _proto.getGroupCountClass = function getGroupCountClass(groups) {
-    switch (groups === null || groups === void 0 ? void 0 : groups.length) {
-      case 1:
-        return _classes.HORIZONTAL_GROUP_COUNT_CLASSES[0];
-
-      case 2:
-        return _classes.HORIZONTAL_GROUP_COUNT_CLASSES[1];
-
-      case 3:
-        return _classes.HORIZONTAL_GROUP_COUNT_CLASSES[2];
-
-      default:
-        return undefined;
-    }
+    return undefined;
   };
 
   _proto.getLeftOffset = function getLeftOffset() {

@@ -2,7 +2,7 @@ import _extends from "@babel/runtime/helpers/esm/extends";
 import { isDefined } from '../../core/utils/type';
 import { AppointmentDataProvider } from './appointments/DataProvider/appointmentDataProvider';
 import { ModelProvider } from './modelProvider';
-import { TimeZoneCalculator } from './timeZoneCalculator';
+import { TimeZoneCalculator } from '../../renovation/ui/scheduler/timeZoneCalculator/utils';
 import timeZoneUtils from './utils.timeZone';
 var Names = {
   timeZoneCalculator: 'timeZoneCalculator',

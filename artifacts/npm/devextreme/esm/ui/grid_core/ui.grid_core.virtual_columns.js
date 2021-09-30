@@ -1,7 +1,7 @@
 /**
 * DevExtreme (esm/ui/grid_core/ui.grid_core.virtual_columns.js)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -9,6 +9,7 @@
 import { getWidth, getOuterWidth } from '../../core/utils/size';
 import { hasWindow } from '../../core/utils/window';
 import { createColumnsInfo } from './ui.grid_core.virtual_columns_core';
+import { isDefined } from '../../core/utils/type';
 var DEFAULT_COLUMN_WIDTH = 50;
 var VirtualScrollingRowsViewExtender = {
   _resizeCore: function _resizeCore() {
@@ -114,17 +115,27 @@ var ColumnsControllerExtender = function () {
       });
       this._renderTime = new Date() - date;
     },
-    setScrollPosition: function setScrollPosition(position) {
-      var that = this;
-      var renderingThreshold = that.option('scrolling.columnRenderingThreshold');
+    getScrollingTimeout: function getScrollingTimeout() {
+      var renderingThreshold = this.option('scrolling.columnRenderingThreshold');
+      var renderAsync = this.option('scrolling.renderAsync');
+      var scrollingTimeout = 0;
 
-      if (that._renderTime > renderingThreshold) {
-        clearTimeout(that._changedTimeout);
-        that._changedTimeout = setTimeout(function () {
-          that._setScrollPositionCore(position);
-        }, that.option('scrolling.timeout'));
+      if (!isDefined(renderAsync) && this._renderTime > renderingThreshold || renderAsync) {
+        scrollingTimeout = this.option('scrolling.timeout');
+      }
+
+      return scrollingTimeout;
+    },
+    setScrollPosition: function setScrollPosition(position) {
+      var scrollingTimeout = this.getScrollingTimeout();
+
+      if (scrollingTimeout > 0) {
+        clearTimeout(this._changedTimeout);
+        this._changedTimeout = setTimeout(() => {
+          this._setScrollPositionCore(position);
+        }, scrollingTimeout);
       } else {
-        that._setScrollPositionCore(position);
+        this._setScrollPositionCore(position);
       }
     },
     isVirtualMode: function isVirtualMode() {

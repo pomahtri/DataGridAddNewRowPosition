@@ -6,8 +6,6 @@ var _config = _interopRequireDefault(require("../config"));
 
 var _type = require("../utils/type");
 
-var _dom_adapter = _interopRequireDefault(require("../dom_adapter"));
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var getDefaultAlignment = function getDefaultAlignment(isRtlEnabled) {
@@ -25,11 +23,7 @@ var getBoundingRect = function getBoundingRect(element) {
     };
   }
 
-  if (_dom_adapter.default.getDocumentElement()) {
-    return element.getBoundingClientRect();
-  }
-
-  return 0;
+  return element.getBoundingClientRect();
 };
 
 exports.getBoundingRect = getBoundingRect;

@@ -1,7 +1,7 @@
 /**
 * DevExtreme (ui/text_box/ui.text_editor.base.d.ts)
 * Version: 21.2.1
-* Build date: Mon Sep 27 2021
+* Build date: Thu Sep 30 2021
 *
 * Copyright (c) 2012 - 2021 Developer Express Inc. ALL RIGHTS RESERVED
 * Read about DevExtreme licensing here: https://js.devexpress.com/Licensing/
@@ -45,6 +45,20 @@ export interface dxTextEditorOptions<TComponent> extends EditorOptions<TComponen
      * @public
      */
     inputAttr?: any;
+    /**
+     * @docid
+     * @default ''
+     * @public
+     */
+    label?: boolean;
+    /**
+     * @docid
+     * @type Enums.EditorLabelMode
+     * @default 'static'
+     * @default 'floating' &for(Material)
+     * @public
+     */
+    labelMode?: 'static' | 'floating' | 'hidden';
     /**
      * @docid
      * @default ""
@@ -171,19 +185,6 @@ export interface dxTextEditorOptions<TComponent> extends EditorOptions<TComponen
      * @public
      */
     onKeyDown?: ((e: NativeEventInfo<TComponent>) => void);
-    /**
-     * @docid
-     * @default null
-     * @type_function_param1 e:object
-     * @type_function_param1_field4 event:event
-     * @deprecated
-     * @type_function_param1_field1 component:this
-     * @type_function_param1_field2 element:DxElement
-     * @type_function_param1_field3 model:any
-     * @action
-     * @public
-     */
-    onKeyPress?: ((e: NativeEventInfo<TComponent>) => void);
     /**
      * @docid
      * @default null

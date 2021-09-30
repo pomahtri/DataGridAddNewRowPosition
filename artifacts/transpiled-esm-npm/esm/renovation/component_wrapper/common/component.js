@@ -131,9 +131,11 @@ export default class ComponentWrapper extends DOMComponent {
         attributes
       } = this.$element()[0];
       this._elementAttr = _extends({}, Object.keys(attributes).reduce((result, key) => {
+        var _attributes$key;
+
         var updatedAttributes = result;
 
-        if (attributes[key].specified) {
+        if ((_attributes$key = attributes[key]) !== null && _attributes$key !== void 0 && _attributes$key.specified) {
           updatedAttributes[attributes[key].name] = attributes[key].value;
         }
 

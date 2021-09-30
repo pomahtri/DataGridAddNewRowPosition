@@ -80,7 +80,6 @@ export var getCurrentViewConfig = (currentViewProps, schedulerProps) => {
   };
   return _extends({}, result, {
     hoursInterval: result.cellDuration / 60,
-    groups: [],
     selectedCellData: []
   });
 };
