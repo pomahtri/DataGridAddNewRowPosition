@@ -58,7 +58,7 @@ const dataSource = DevExpress.data.AspNet.createStore({
     ajaxOptions.xhrFields = { withCredentials: true };
   },
 });
-  $(() => {
+$(() => {
   const newRowPositionOptions = ['first', 'last', 'pageBottom', 'pageTop', 'viewportBottom', 'viewportTop'];
   const scrollingModeOptions = ['standard', 'virtual'];
 
@@ -70,7 +70,6 @@ const dataSource = DevExpress.data.AspNet.createStore({
       allowAdding: true,
       allowDeleting: true,
       allowUpdating: true,
-      mode: 'cell',
       confirmDelete: false,
       useIcons: true,
       newRowPosition: 'viewportTop',
@@ -104,7 +103,7 @@ const dataSource = DevExpress.data.AspNet.createStore({
           visible({ row }) {
             return !row.isEditing;
           },
-        }, 'delete'],
+        }, 'delete', 'cancel'],
       }],
     toolbar: {
       items: [{
@@ -133,6 +132,7 @@ const dataSource = DevExpress.data.AspNet.createStore({
     },
   }).dxSelectBox('instance');
 });
+
 
 
 </script>
